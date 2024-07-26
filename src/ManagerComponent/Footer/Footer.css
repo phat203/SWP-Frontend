@@ -1,0 +1,87 @@
+.footer {
+    background-color: white; /* Set background color to white */
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    border-top: 1px solid #d1d1d1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align items to the top */
+    width: 90%; /* Adjust as needed */
+    margin: 0 auto; /* Center the content horizontally */
+}
+
+.footer-left {
+    text-align: center;
+    background-color: white; /* Yellow background color */
+    padding: 10px; /* Add padding for spacing */
+    border-radius: 5px; /* Optional: Add border radius for rounded corners */
+    width: 40%; /* Adjust width as needed */
+}
+
+.footer-logo {
+    max-height: 50px;
+    vertical-align: middle;
+}
+
+.contact-info, .footer-left .footer-text {
+    margin-top: 10px; /* Add margin for spacing */
+}
+
+.address {
+    margin-top: 5px; /* Add margin for spacing */
+}
+
+.payment-methods {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of icons */
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.payment-methods img {
+    height: 30px;
+    margin: 10px; /* Add margin for spacing */
+}
+
+.social-icons {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.social-icon {
+    width: 30px;
+    margin: 0 5px;
+    vertical-align: middle;
+}
+
+.certification {
+    margin-top: 20px; /* Adjust margin as needed */
+    text-align: center;
+}
+
+.certification img {
+    max-width: 100%; /* Ensure image doesn't overflow */
+    height: auto; /* Maintain aspect ratio */
+}
+.email-info {
+    margin-top: 5px; /* Add margin for spacing */
+}
+
+
+.email-info a {
+    color: inherit; /* Use the same color as the surrounding text */
+    text-decoration: none; /* Remove underline from the link */
+}
+
+.email-info a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}

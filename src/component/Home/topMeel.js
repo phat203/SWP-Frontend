@@ -1,0 +1,30 @@
+export const topMeels=[
+    {
+        image:"https://cdn.pnj.io/images/detailed/211/sp-gn0000c000593-nhan-vang-y-18k-pnj-1.png",
+        title:"Ring"
+    },
+    {
+        image:"https://cdn.pnj.io/images/detailed/205/on-gd0000w001070-day-chuyen-vang-trang-y-18k-pnj-1.jpg",
+        title:"Necklace"
+    },
+    {
+        image:"https://cdn.pnj.io/images/detailed/202/sp-gbpfxmy000621-bong-tai-vang-18k-dinh-ngoc-trai-freshwater-pnj-1.png",
+        title:"Earring"
+    },
+    {
+        image:"https://cdn.pnj.io/images/detailed/202/sp-gl0000y002816-lac-tay-vang-18k-pnj-1.png",
+        title:"Shake"
+    },
+    {
+        image:"https://cdn.pnj.io/images/detailed/185/sp-gcptmxw060000-day-co-vang-trang-14k-dinh-ngoc-trai-tahiti-pnj-1.png",
+        title:"Neck Strap"
+    },
+    {
+        image:"https://cdn.pnj.io/images/detailed/184/sp-ghxmxmy000036-kieng-cuoi-vang-18k-dinh-da-ecz-pnj-trau-cau-1.png",
+        title:"Stirrups"
+    },
+    {
+        image:"https://cdn.pnj.io/images/detailed/205/sp-smxm00w000036-mat-day-chuyen-bac-dinh-ngoc-trai-pnjsilver-2.png",
+        title:"Pendant"
+    }
+]
