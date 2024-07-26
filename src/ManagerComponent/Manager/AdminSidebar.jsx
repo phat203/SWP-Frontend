@@ -11,6 +11,7 @@ import {
     ShoppingBag,
     ShoppingCartCheckout
 } from '@mui/icons-material';
+import PolicyIcon from '@mui/icons-material/Policy';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
 import {
@@ -41,6 +42,7 @@ const menu = [
    { title: "Category", icon: <Category />, path: "/category" },
    { title: "Ingredients", icon: <Diamond />, path: "/ingredients" },
    { title: "Staff", icon: <Group />, path: "/teams" },
+   { title: "Policy", icon: <PolicyIcon />, path: "/policy" },
    { title: "Events", icon: <Event />, path: "/event" },
    { title: "Area", icon: <PermMediaIcon />, path: "/area" },
    { title: "Logout", icon: <Logout sx={{ color: 'red' }} />, path: "/logout" },
