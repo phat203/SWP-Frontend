@@ -173,19 +173,19 @@ const JewelryDetails = () => {
                   <FormControlLabel
                     value="50-200"
                     control={<Radio sx={radioStyles} />}
-                    label="50 Usd - 200 Usd"
+                    label="50 USD - 200 USD"
                     onChange={() => handleFilterByPrice("50-200")}
                   />
                   <FormControlLabel
                     value="200-1000"
                     control={<Radio sx={radioStyles} />}
-                    label="200 Usd - 1000 Usd"
+                    label="200 USD - 1000 USD"
                     onChange={() => handleFilterByPrice("200-1000")}
                   />
                   <FormControlLabel
                     value="1000+"
                     control={<Radio sx={radioStyles} />}
-                    label="Over 1000 Usd"
+                    label="Over 1000 USD"
                     onChange={() => handleFilterByPrice("1000+")}
                   />
                 </RadioGroup>
