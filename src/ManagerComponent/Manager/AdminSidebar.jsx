@@ -14,6 +14,7 @@ import {
 import PolicyIcon from '@mui/icons-material/Policy';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import {
     Box,
     Collapse,
@@ -37,7 +38,7 @@ const menu = [
    { title: "Orders", icon: <ShoppingBag />, path: "/orders" },
    { title: "Buyback", icon: <ShoppingCartCheckout />, path: "/buyback" },
    { title: "Customer", icon: <Checklist />, path: "/customer" },
-   { title: "Instock", icon: <ShopTwo />, path: "/menu" },
+   { title: "Instock", icon: <StorefrontIcon />, path: "/menu" },
    { title: "OutStock", icon: <InventoryIcon />, path: "/instock" },
    { title: "Category", icon: <Category />, path: "/category" },
    { title: "Ingredients", icon: <Diamond />, path: "/ingredients" },
