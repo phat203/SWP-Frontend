@@ -404,7 +404,7 @@ const Buy = () => {
       </form>
       {buybackPrice && (
         <Typography variant="h5" fontWeight="bold" mt={2}>
-          TotalPrice: ${buybackPrice} 
+          Total Price: ${buybackPrice.toFixed(2)} 
         </Typography>
       )}
       <Button

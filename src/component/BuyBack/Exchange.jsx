@@ -174,7 +174,7 @@ const Buy = () => {
                     <Typography variant="body1"><strong>Price buybacks:</strong></Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography variant="body1">${valuation.totalPrice}</Typography>
+                    <Typography variant="body1">${valuation.totalPrice.toFixed(2)}</Typography>
                   </Grid>
                 </Grid>
               </CardContent>

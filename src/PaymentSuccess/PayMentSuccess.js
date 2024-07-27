@@ -44,7 +44,7 @@ export const PayMentSuccess = () => {
                                     <p>Customer Name: {orderDetails.customer.fullname}</p>
                                     <p>Mobile: {orderDetails.customer.mobile}</p>
                                     <p>Email: {orderDetails.customer.email}</p>
-                                    <p> {orderDetails.description}</p>
+                                    <p> {orderDetails.customer.type}</p>
                                 </div>
                             ) : (
                                 <p>Loading...</p>
@@ -73,11 +73,13 @@ export const PayMentSuccess = () => {
                             <h2 className="text-xl mb-2">Total Summary</h2>
                             {orderDetails ? (
                                 <div>
-                                    <p>Total Amount: {orderDetails.totalAmount}</p>
-                                    <p>Discount: {orderDetails.items[0].discountPercentage}% on entire bill</p>
-                                    <p>Promotions exclusively for loyal customers: {orderDetails.detail}</p>
-                                    <p>Total Pay: {orderDetails.totalPrice.toFixed(2)}</p>
-                                </div>
+                                <p>Total Amount: {orderDetails.totalAmount}</p>
+                                <p>Discount: {orderDetails.items[0].discountPercentage}% on entire bill</p>
+                                {orderDetails.customer.discount > 0 && (
+                                    <p>Promotions exclusively for loyal customers: {orderDetails.customer.discount} %</p>
+                                )}
+                                <p>Total Pay: {orderDetails.totalPrice.toFixed(2)}</p>
+                            </div>
                             ) : (
                                 <p>Loading...</p>
                             )}
