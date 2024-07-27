@@ -14,12 +14,10 @@ import {
   Typography,
   TextField,
   IconButton,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Radio,
   RadioGroup,
   FormControlLabel,
+  Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { getALLsOrders } from "../../component/State/Order/Action";
@@ -32,6 +30,8 @@ export default function OrdersTable({ filter }) {
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 12; // Số lượng orders mỗi trang
 
   useEffect(() => {
     dispatch(getALLsOrders(jwt));
@@ -48,6 +48,7 @@ export default function OrdersTable({ filter }) {
           order.id.toString().toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setSearchResults(filteredOrders);
+    setCurrentPage(1); // Reset lại trang hiện tại khi thay đổi filter hoặc search term
   }, [orders, filterStatus, searchTerm]);
 
   const handleFilterChange = (event) => {
@@ -57,6 +58,14 @@ export default function OrdersTable({ filter }) {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = searchResults.slice(indexOfFirstOrder, indexOfLastOrder);
 
   return (
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
@@ -83,28 +92,26 @@ export default function OrdersTable({ filter }) {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <FormControl component="fieldset" sx={{ minWidth: 350 }}>
-              <RadioGroup
-                row
-                aria-label="filter-status"
-                name="filter-status"
-                value={filterStatus}
-                onChange={handleFilterChange}
-                sx={{ display: "flex", justifyContent: "center" }}
-              >
-                <FormControlLabel value="ALL" control={<Radio />} label="All" />
-                <FormControlLabel
-                  value="PENDING"
-                  control={<Radio />}
-                  label="Pending"
-                />
-                <FormControlLabel
-                  value="COMPLETED"
-                  control={<Radio />}
-                  label="Completed"
-                />
-              </RadioGroup>
-            </FormControl>
+            <RadioGroup
+              row
+              aria-label="filter-status"
+              name="filter-status"
+              value={filterStatus}
+              onChange={handleFilterChange}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <FormControlLabel value="ALL" control={<Radio />} label="All" />
+              <FormControlLabel
+                value="PENDING"
+                control={<Radio />}
+                label="Pending"
+              />
+              <FormControlLabel
+                value="COMPLETED"
+                control={<Radio />}
+                label="Completed"
+              />
+            </RadioGroup>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <TextField
@@ -189,7 +196,7 @@ export default function OrdersTable({ filter }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {searchResults.length === 0 ? (
+              {currentOrders.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} align="center">
                     <Typography variant="body1" sx={{ fontStyle: "italic" }}>
@@ -198,7 +205,7 @@ export default function OrdersTable({ filter }) {
                   </TableCell>
                 </TableRow>
               ) : (
-                searchResults.map((order) => (
+                currentOrders.map((order) => (
                   <TableRow
                     key={order.id}
                     sx={{
@@ -236,6 +243,14 @@ export default function OrdersTable({ filter }) {
             </TableBody>
           </Table>
         </TableContainer>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2, pb: 2 }}>
+          <Pagination
+            count={Math.ceil(searchResults.length / ordersPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
       </Card>
     </Box>
   );

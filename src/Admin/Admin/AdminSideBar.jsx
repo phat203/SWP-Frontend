@@ -69,7 +69,7 @@ const AdminSidebar = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        backgroundColor: "#F1EEEB",
+                        backgroundColor: "#FFFFF",
                         color: 'white',
                         p: 2,
                     }}
@@ -96,7 +96,7 @@ const AdminSidebar = () => {
                                 onClick={() => handleNavigate(item)}
                                 sx={{
                                     '&:hover': {
-                                        backgroundColor:"White",
+                                        backgroundColor:"#003366",
                                     },
                                     transition: 'all 0.3s',
                                     mb: 1,

@@ -14,26 +14,26 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Alert,
-  TextField,         // Add this import for TextField
-  InputAdornment,    // Add this import for InputAdornment
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllComponent } from "../../component/State/Components/Action";
 import UpdateForm from "./UpdateForm";
 import CreateIngredientsForm from "./CreateIngredientsForm";
-import SearchIcon from '@mui/icons-material/Search';  // Add this import for SearchIcon
+import SearchIcon from '@mui/icons-material/Search';
 import UpgradeIcon from "@mui/icons-material/Upgrade";
-
+import CloseIcon from '@mui/icons-material/Close';  // Import CloseIcon
 
 const IngredientTable = () => {
   const [open, setOpen] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showDialog, setShowDialog] = useState(false);  // State for dialog visibility
   const { components } = useSelector((state) => state.component);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const [showNoComponentAlert, setShowNoComponentAlert] = useState(false); // State for showing no component alert
+  const [showNoComponentAlert, setShowNoComponentAlert] = useState(false);
 
   useEffect(() => {
     dispatch(getAllComponent({ jwt }));
@@ -63,7 +63,14 @@ const IngredientTable = () => {
     }
   };
 
-  // Filter components based on search term
+  const handleImageClick = () => {
+    setShowDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
+  };
+
   const filteredComponents = components.filter((component) =>
     component.name.toLowerCase().includes(searchTerm)
   );
@@ -88,8 +95,8 @@ const IngredientTable = () => {
             color: "#fff",
           }}
         />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 2,marginTop: 2 }}>
-        <TextField
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 2, marginTop: 2 }}>
+          <TextField
             id="search-input"
             label="Search by Name"
             variant="outlined"
@@ -126,14 +133,6 @@ const IngredientTable = () => {
             }}
           />
         </Box>
-
-        {/* Display Alert if no component found */}
-        {/* {showNoComponentAlert && (
-          <Alert severity="warning" sx={{ mb: 3, mx: "auto", width: "fit-content" }}>
-            No ingredients found with the provided name.
-          </Alert>
-        )} */}
-
         <TableContainer component={Paper}>
           <Table aria-label="ingredient table" sx={{ minWidth: 650 }}>
             <TableHead>
@@ -206,11 +205,10 @@ const IngredientTable = () => {
                   </TableCell>
                 </TableRow>
               ))}
-              {/* Show message if no ingredients found */}
               {searchTerm !== "" && filteredComponents.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={5} align="center">
-                    No ingredients not found.
+                    No ingredients found.
                   </TableCell>
                 </TableRow>
               )}
@@ -218,6 +216,7 @@ const IngredientTable = () => {
           </Table>
         </TableContainer>
       </Card>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -238,6 +237,13 @@ const IngredientTable = () => {
             borderRadius: 2,
           }}
         >
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 8, right: 8 }}
+          >
+            <CloseIcon sx={{ color: 'red' }}  />
+          </IconButton>
           {selectedComponent ? (
             <UpdateForm component={selectedComponent} onClose={handleClose} />
           ) : (
@@ -245,6 +251,9 @@ const IngredientTable = () => {
           )}
         </Box>
       </Modal>
+
+      {/* Image click dialog */}
+     
     </Box>
   );
 };

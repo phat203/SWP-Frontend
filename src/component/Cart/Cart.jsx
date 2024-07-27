@@ -1,5 +1,5 @@
 import AddCardIcon from "@mui/icons-material/AddCard";
-import {Link} from "react-router-dom"
+import {Link, useLocation} from "react-router-dom"
 import {
   Box,
   Button,
@@ -68,7 +68,9 @@ const Cart = () => {
   const [couponCode, setCouponCode] = useState("");
   const [customInvoicePercentage] = useState("");
   const navigate = useNavigate();
-  const { cart } = useSelector((store) => store);
+  // const { cart } = useSelector((store) => store);
+  const location = useLocation();
+  const { cart } = location.state || {};
   const dispatch = useDispatch();
   const jwt =  localStorage.getItem("jwt")
 
@@ -104,7 +106,7 @@ const Cart = () => {
       } else {
         toast.error("Failed to create order. Please try again.");
       }
-      console.error("error:", error);
+console.error("error:", error);
     }
   };
 
@@ -211,7 +213,7 @@ const Cart = () => {
                 <Typography variant="h6" className="p-3">
                   Cart Items
                 </Typography>
-                <Table>
+<Table>
                   <TableHead>
                     <TableRow>
 
@@ -289,7 +291,7 @@ const Cart = () => {
                 onClick={handleAddToCart}
                 sx={{
                   color: "green",
-                  borderColor: "green",
+borderColor: "green",
                   fontWeight: "bold",
                   width: "120px",
                   "&:hover": {
@@ -382,7 +384,7 @@ const Cart = () => {
             >
               <Typography variant="h6" className="p-3">
                 Bill Details
-              </Typography>
+</Typography>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -466,7 +468,7 @@ const Cart = () => {
                 >
                   <AddCardIcon sx={{ fontSize: 40, color: "gray" }} />
                   <Box textAlign="center" color="gray">
-                    {/* <Typography variant="body1" gutterBottom>
+{/* <Typography variant="body1" gutterBottom>
                       Customer Information
                     </Typography> */}
                     <Button
