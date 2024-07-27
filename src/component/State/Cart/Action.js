@@ -14,7 +14,6 @@ export const findCart = (token) => {
             dispatch({type:FIND_CART_SUCCESS,payload:response.data});
         } catch (error) {
             dispatch({type:FIND_CART_FAILURE,payload:error})
-            throw error;
         }
     };
 };

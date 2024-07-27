@@ -13,13 +13,11 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
-  Alert,
   Pagination,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  fetchAllCustomers,
+  
   getAllCustomers,
 } from "../../component/State/Customer/Action";
 import UpdateCustomerForm from "./UpdateCustomerForm";
@@ -42,7 +40,7 @@ const Customer = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showNoResults, setShowNoResults] = useState(false);
+  const [setShowNoResults] = useState(false);
   const ordersPerPage = 12;
 
   const { customers } = useSelector((state) => state.customer);
@@ -180,6 +178,12 @@ const Customer = () => {
                   Email
                 </TableCell>
                 <TableCell
+                align="center"
+                sx={{ color: "white", fontWeight: "bold" }}
+              >
+                Type
+              </TableCell>
+                <TableCell
                   align="right"
                   sx={{ color: "white", fontWeight: "bold" }}
                 >
@@ -196,7 +200,8 @@ const Customer = () => {
                     </TableCell>
                     <TableCell align="right">{customer.fullname}</TableCell>
                     <TableCell align="right">{customer.mobile}</TableCell>
-                    <TableCell align="right">{customer.email}</TableCell>
+                    <TableCell align="center">{customer.email}</TableCell>
+                    <TableCell align="center">{customer.type}</TableCell>
                     <TableCell align="right">{customer.point}</TableCell>
                   </TableRow>
                 ))

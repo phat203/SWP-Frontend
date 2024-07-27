@@ -16,8 +16,6 @@ const areaReducer = (state = initialState, action) => {
         case actionTypes.DELETE_AREA_REQUEST:
         case actionTypes.UPDATE_AREA_REQUEST:
         case actionTypes.GET_AREA_BY_USER_ID_REQUEST:
-        // case actionTypes.CREATE_CATEGORY_REQUEST:
-        // case actionTypes.GET_CATEGORY_REQUEST:
             return {
                 ...state,
                 loading: true,

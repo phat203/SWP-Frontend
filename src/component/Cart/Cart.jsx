@@ -67,10 +67,9 @@ const Cart = () => {
   const [productCode, setProductCode] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [customInvoicePercentage] = useState("");
-  const navigate = useNavigate();
-  // const { cart } = useSelector((store) => store);
-  const location = useLocation();
-  const { cart } = location.state || {};
+  const { cart } = useSelector((store) => store);
+  // const location = useLocation();
+  // const { cart } = location.state || {};
   const dispatch = useDispatch();
   const jwt =  localStorage.getItem("jwt")
 

@@ -32,8 +32,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
     };
 
     const handleCheckout = () => {
-        const cartItems = cart.cart?.items;
-        navigate("/staff/jewelry/cart", { state: { cart } });
+        window.location.href = "/staff/jewelry/cart";
     };
 
     return (

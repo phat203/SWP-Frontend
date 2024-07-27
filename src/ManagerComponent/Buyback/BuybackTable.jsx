@@ -177,7 +177,7 @@ export default function BuyBackTable() {
                     <TableCell align="center" sx={{ color: "black" }}>
                       {format(
                         new Date(buybackItem.transactionDate),
-                        "dd/MM/yyyy HH:mm"
+                        "MM/dd/yyyy HH:mm"
                       )}
                     </TableCell>
                   </TableRow>

@@ -31,7 +31,7 @@ export default function OrdersTable({ filter }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 12; // Số lượng orders mỗi trang
+  const ordersPerPage = 12;
 
   useEffect(() => {
     dispatch(getALLsOrders(jwt));
@@ -48,7 +48,7 @@ export default function OrdersTable({ filter }) {
           order.id.toString().toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setSearchResults(filteredOrders);
-    setCurrentPage(1); // Reset lại trang hiện tại khi thay đổi filter hoặc search term
+    setCurrentPage(1);
   }, [orders, filterStatus, searchTerm]);
 
   const handleFilterChange = (event) => {
@@ -61,6 +61,11 @@ export default function OrdersTable({ filter }) {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', day: '2-digit',month: '2-digit', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   const indexOfLastOrder = currentPage * ordersPerPage;
@@ -143,7 +148,7 @@ export default function OrdersTable({ filter }) {
             />
             <IconButton
               aria-label="search"
-              onClick={() => console.log("Search clicked")} // Replace with actual search functionality
+              onClick={() => console.log("Search clicked")}
             >
               <SearchIcon />
             </IconButton>
@@ -190,6 +195,14 @@ export default function OrdersTable({ filter }) {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold", color: "white" }}
                   >
+                    Creation Date
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold", color: "white" }}
+                  >
                     Status
                   </Typography>
                 </TableCell>
@@ -198,7 +211,7 @@ export default function OrdersTable({ filter }) {
             <TableBody>
               {currentOrders.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center">
+                  <TableCell colSpan={6} align="center">
                     <Typography variant="body1" sx={{ fontStyle: "italic" }}>
                       No orders found.
                     </Typography>
@@ -225,6 +238,7 @@ export default function OrdersTable({ filter }) {
                     </TableCell>
                     <TableCell align="center">{order.totalPrice}</TableCell>
                     <TableCell align="center">{order.areaName}</TableCell>
+                    <TableCell align="center">{formatDate(order.createdAt)}</TableCell>
                     <TableCell align="center">
                       <Typography
                         variant="body2"
