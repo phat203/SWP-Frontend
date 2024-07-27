@@ -39,8 +39,8 @@ export const CustomerRoute = () => {
         <Route path='/buy' element={<Buy />} />
         <Route path='/exchange' element={<Exchange />} />
         <Route path='/payment/success/:orderId' element={<PayMentSuccess />} />
-        <Route path='/buyback-success' element={<Invoice />} />
-        <Route path='/buyback-out-success' element={<InvoiceOut/>} />
+        <Route path='/buyback-success/:buyBackId' element={<Invoice/>} />
+        <Route path='/buyback-out-success/:buyBackId' element={<InvoiceOut/>} />
       </Routes>
     </div>
   );

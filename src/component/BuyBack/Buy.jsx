@@ -34,7 +34,6 @@ const Buy = () => {
   const [images, setImages] = useState([]);
   const [buybackPrice, setBuybackPrice] = useState(null);
   const jwt = localStorage.getItem("jwt");
-  const navigate = useNavigate();
 
   const [isCustomerInfoModalOpen, setIsCustomerInfoModalOpen] = useState(false); // State for managing customer info modal open state
   const [isCodeModalOpen, setIsCodeModalOpen] = useState(false); // State for managing code modal open state
@@ -62,10 +61,6 @@ const Buy = () => {
       .matches(/^[^\s].*[^\s]$/, 'Email cannot have spaces'),
   });
 
-  const handleCalculateBuybackPriceClick = async () => {
-    await handleCalculateBuybackPrice();
-    handleSetBuybackPrice();
-  };
 
   const handleCalculateBuybackPrice = async () => {
     dispatch(
@@ -154,7 +149,6 @@ const Buy = () => {
   return (
     <div>
       <Navbar/>
-      <div className="mt-28">
     <Box
       display="flex"
       flexDirection="column"
@@ -405,7 +399,7 @@ const Buy = () => {
       </form>
       {buybackPrice && (
         <Typography variant="h5" fontWeight="bold" mt={2}>
-          Total Price: ${buybackPrice.toFixed(2)} 
+          TotalPrice: ${buybackPrice} 
         </Typography>
       )}
       <Button
@@ -498,9 +492,9 @@ const Buy = () => {
                 components: components.filter(Boolean),
               };
         
-              navigate("/staff/jewelry/buyback-out-success", {
-                state: { buyback: customer, product: product, valuation },
-              });
+              // navigate("/staff/jewelry/buyback-out-success", {
+              //   state: { buyback: customer, product: product, valuation },
+              // });
         
               // Đóng modal và reset trạng thái
               handleCloseCustomerInfoModal();
@@ -712,7 +706,6 @@ const Buy = () => {
         </Box>
       </Modal>
     </Box>
-    </div>
     </div>
   );
 };

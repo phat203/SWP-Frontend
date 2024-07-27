@@ -74,7 +74,6 @@ const Buy = () => {
   return (
     <div>
       <Navbar/>
-      <div className="mt-28">
     <Box
     display="flex"
     flexDirection="column"
@@ -175,7 +174,7 @@ const Buy = () => {
                     <Typography variant="body1"><strong>Price buybacks:</strong></Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography variant="body1">${valuation.totalPrice.toFixed(2)}</Typography>
+                    <Typography variant="body1">${valuation.totalPrice}</Typography>
                   </Grid>
                 </Grid>
               </CardContent>
@@ -353,7 +352,6 @@ const Buy = () => {
       </Modal>
     </Box>
     </div>
-  </div>
   );
 };
 
