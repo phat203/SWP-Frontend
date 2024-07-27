@@ -20,6 +20,7 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import BlockIcon from "@mui/icons-material/Block";
@@ -38,6 +39,8 @@ export default function StaffTableA() {
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     dispatch(getAllStaffAndManagerUsers(jwt));
@@ -80,6 +83,14 @@ export default function StaffTableA() {
   const filteredStaff = auth.users.filter((user) =>
     user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredStaff.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
@@ -191,8 +202,8 @@ export default function StaffTableA() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredStaff.length > 0 ? (
-                filteredStaff.map((row) => (
+              {currentItems.length > 0 ? (
+                currentItems.map((row) => (
                   <TableRow
                     key={row.username}
                     sx={{
@@ -227,6 +238,14 @@ export default function StaffTableA() {
               )}
             </TableBody>
           </Table>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, pb: 2 }}>
+            <Pagination
+              count={Math.ceil(filteredStaff.length / itemsPerPage)}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
         </TableContainer>
       </Card>
       <Dialog open={open} onClose={handleCloseDialog} sx={{ borderRadius: 2 }}>

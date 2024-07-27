@@ -16,6 +16,7 @@ import {
   Typography,
   TextField,
   InputAdornment,
+  Pagination, // Import Pagination
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllComponent } from "../../component/State/Components/Action";
@@ -34,6 +35,9 @@ const IngredientTable = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const [showNoComponentAlert, setShowNoComponentAlert] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 12;
 
   useEffect(() => {
     dispatch(getAllComponent({ jwt }));
@@ -63,16 +67,17 @@ const IngredientTable = () => {
     }
   };
 
-  const handleImageClick = () => {
-    setShowDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setShowDialog(false);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
   const filteredComponents = components.filter((component) =>
     component.name.toLowerCase().includes(searchTerm)
+  );
+
+  const paginatedComponents = filteredComponents.slice(
+    (currentPage - 1) * ordersPerPage,
+    currentPage * ordersPerPage
   );
 
   return (
@@ -180,7 +185,7 @@ const IngredientTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredComponents.map((item, index) => (
+              {paginatedComponents.map((item, index) => (
                 <TableRow
                   key={item.id}
                   sx={{
@@ -189,7 +194,7 @@ const IngredientTable = () => {
                   }}
                 >
                   <TableCell component="th" scope="row">
-                    {index + 1}
+                    {(currentPage - 1) * ordersPerPage + index + 1}
                   </TableCell>
                   <TableCell align="left">{item.name}</TableCell>
                   <TableCell align="left">{item.price}</TableCell>
@@ -214,6 +219,14 @@ const IngredientTable = () => {
               )}
             </TableBody>
           </Table>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, pb: 2 }}>
+            <Pagination
+              count={Math.ceil(filteredComponents.length / ordersPerPage)}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
         </TableContainer>
       </Card>
 
@@ -251,9 +264,6 @@ const IngredientTable = () => {
           )}
         </Box>
       </Modal>
-
-      {/* Image click dialog */}
-     
     </Box>
   );
 };
