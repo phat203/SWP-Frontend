@@ -309,6 +309,31 @@ const Dashboard = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <div>
+      <Typography variant="h4" sx={{ mt: 4, color: '#3f51b5' }}>Top Product</Typography>
+      <TableContainer component={Paper} sx={{ marginTop: '20px' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Product</TableCell>
+              <TableCell align="right">Total Orders</TableCell>
+              <TableCell align="right">Total Amount</TableCell>
+              <TableCell align="right">Total Items</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {area.areas?.map((a) => (
+              <TableRow key={a.id}>
+                <TableCell>{a.name}</TableCell>
+                <TableCell align="right">{dashboard.areas?.[a.id]?.totalOrders || 0}</TableCell>
+                <TableCell align="right">{dashboard.areas?.[a.id]?.totalAmount || 0}</TableCell>
+                <TableCell align="right">{dashboard.areas?.[a.id]?.totalItems || 0}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </div>
     </div>
   );
 };
