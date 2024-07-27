@@ -19,6 +19,7 @@ import {
   DialogTitle,
   Button,
   TextField,
+  Pagination,
 } from "@mui/material";
 import {
   Refresh as RefreshIcon,
@@ -45,6 +46,8 @@ const InstockTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showNoItemAlert, setShowNoItemAlert] = useState(false);
   const [filteredMenuItems, setFilteredMenuItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 12;
 
   useEffect(() => {
     dispatch(getOutOfStockItems({jwt}));
@@ -109,6 +112,15 @@ const InstockTable = () => {
       setShowNoItemAlert(false);
     }
   };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  // Calculate the items to display for the current page
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = filteredMenuItems.slice(indexOfFirstOrder, indexOfLastOrder);
 
   return (
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
@@ -251,8 +263,7 @@ const InstockTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {menu.outOfStock
-                .filter((row) => row.name.toLowerCase().includes(searchTerm))
+              {currentOrders
                 .map((row) => (
                   <TableRow
                     key={row.name}
@@ -272,68 +283,69 @@ const InstockTable = () => {
                     <TableCell align="center">{row.code}</TableCell>
                     <TableCell align="right">{row.name}</TableCell>
                     <TableCell align="right">
-                      {row.jewelryCategory.name}
+                      {row.type ? row.type.name : "N/A"}
                     </TableCell>
-                    <TableCell align="right">
-                      {row.components[0]?.name} with {row.components[1]?.name}
+                    <TableCell align="center">
+                      {row.components
+                        ? row.components.map((component) => component.name).join(", ")
+                        : "N/A"}
                     </TableCell>
-                    <TableCell align="right">{row.price}</TableCell>
-                    <TableCell align="right">
-                      <IconButton onClick={() => handleClickOpen(row)}>
-                        <AddIcon />
-                      </IconButton>
+                    <TableCell align="right">{row.price} VND</TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddIcon />}
+                        onClick={() => handleClickOpen(row)}
+                      >
+                        Add
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
-              {/* Show message if no items found */}
-              {searchTerm !== "" &&
-                menu.menuItems.filter((row) =>
-                  row.name.toLowerCase().includes(searchTerm.toLowerCase())
-                ).length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={7} align="center">
-                      <Typography variant="body2" color="textSecondary">
-                        No items found.
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                )}
             </TableBody>
           </Table>
         </TableContainer>
-        {showNoItemAlert && (
-          <Typography
-            variant="body2"
-            color="error"
-            sx={{ mt: 2, textAlign: "center" }}
-          >
-            No items match your search criteria.
-          </Typography>
-        )}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: 2,
+          }}
+        >
+          <Pagination
+            count={Math.ceil(filteredMenuItems.length / ordersPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
       </Card>
 
-      {/* Dialog for adding item to stock */}
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Add Item to Stock"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {"Add Item to Stock"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to add this item to stock?
+            Are you sure you want to add this item back to stock?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleDelete} color="primary">
-            Add
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* Toast Container */}
       <ToastContainer />
     </Box>
   );

@@ -10,6 +10,7 @@ const About = () => {
   return (
     <div>
       <Navbar/>
+      <div className="mt-28">
     <Box sx={{ width: "100%", maxWidth: "1252px", margin: "50px 250px 200px" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
@@ -173,6 +174,7 @@ For products that do not have to be purchased at the store, there will be a sepa
         </Grid>
       </Grid>
     </Box>
+    </div>
     </div>
   );
 };

@@ -73,6 +73,7 @@ const Home = () => {
     }, []);
 
     return (
+        <div className="mt-24">
         <div className="pb-10">
             <Navbar />
             <div className="black-separator"></div> {/* Black line separator */}
@@ -117,6 +118,7 @@ const Home = () => {
                 </div>
             </section> */}
             <Footer/>
+        </div>
         </div>
     );
 };

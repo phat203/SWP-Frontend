@@ -1,5 +1,6 @@
 import CreateIcon from "@mui/icons-material/Create";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
 import {
   Box,
   Card,
@@ -39,9 +40,18 @@ export default function CategoryTable() {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCategories, setFilteredCategories] = useState([]);
+  const [showDialog, setShowDialog] = useState(false); // New state for handling dialog
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleImageClick = () => {
+    setShowDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
+  };
 
   const jwt = localStorage.getItem("jwt");
 
@@ -168,7 +178,7 @@ export default function CategoryTable() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={2} align="center">
-                    No categories not found.
+                    No categories found.
                   </TableCell>
                 </TableRow>
               )}
@@ -184,6 +194,12 @@ export default function CategoryTable() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={modalStyle}>
+          <IconButton
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 8, right: 8 }}
+          >
+            <CloseIcon sx={{ color: 'red' }} />
+          </IconButton>
           <CreateCategoryForm />
         </Box>
       </Modal>

@@ -43,7 +43,7 @@ export const EventShow = () => {
   };
 
   return (
-    <div className='mt-5 px-5 flex flex-wrap gap-5'>
+    <div className='mt-5 flex flex-wrap gap-5'>
       {recentCoupons.map(coupon => (
         <div key={coupon.id} style={fadeInStyle} onClick={() => handleCouponClick(coupon.id)}>
           <EventCard coupon={coupon} />

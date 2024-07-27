@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Modal, TextField } from "@mui/material";
+import { Box, Button, Grid, Modal, TextField, IconButton } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import React, { useState } from "react";
@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { createCoupon } from "../../component/State/Event/Action";
 import EventTable from "./EventTable";
+import CloseIcon from '@mui/icons-material/Close'; // Import the CloseIcon
 
 const style = {
   position: "absolute",
@@ -56,23 +57,23 @@ export const Events = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  if (validateForm()) {
-    try {
-      console.log("submit ", formValue);
-      await dispatch(createCoupon(formValue, jwt));
-      setFormValue(initialValue);
-      toast.success("Coupon created successfully!");
-      handleClose();
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
-        toast.error(`${error.response.data.message}`);
-      } else {
-        toast.error("Duplicate name. Please try again.");
+    if (validateForm()) {
+      try {
+        console.log("submit ", formValue);
+        await dispatch(createCoupon(formValue, jwt));
+        setFormValue(initialValue);
+        toast.success("Coupon created successfully!");
+        handleClose();
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          toast.error(`${error.response.data.message}`);
+        } else {
+          toast.error("Duplicate name. Please try again.");
+        }
+        console.error("error:", error);
       }
-      console.error("error:", error);
     }
-  }
-};
+  };
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -102,180 +103,61 @@ export const Events = () => {
     }
   };
 
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
   return (
     <>
-    <div className="px-4">
-      <div className="p-5">
-        <Button
-          onClick={handleOpen}
-          variant="contained"
-          sx={{
-            mt: 2,
-            bgcolor: "#0B4CBB",
-            color: "white",
-            fontWeight: "bold",
-            height: "40px", // Adjust height as needed
-            padding: "8px",
-            "&:hover": {
-              bgcolor: "darkorange",
-            },
-            "&:focus": {
-              bgcolor: "black",
-            },
-          }}
-        >
-          Create New Event
-        </Button>
+      <div className="px-4">
+        <div className="p-5">
+          <Button
+            onClick={handleOpen}
+            variant="contained"
+            sx={{
+              mt: 2,
+              bgcolor: "#0B4CBB",
+              color: "white",
+              fontWeight: "bold",
+              height: "40px", // Adjust height as needed
+              padding: "8px",
+              "&:hover": {
+                bgcolor: "darkorange",
+              },
+              "&:focus": {
+                bgcolor: "black",
+              },
+            }}
+          >
+            Create New Event
+          </Button>
 
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <TextField
-                    name="images"
-                    label="Image URL"
-                    variant="outlined"
-                    fullWidth
-                    value={formValue.images}
-                    onChange={handleFormChange}
-                    onBlur={() => validateForm("images")}
-                    error={!!errors.images}
-                    helperText={errors.images}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "gray",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "gray",
-                      },
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "gray",
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name="name"
-                    label="Name"
-                    variant="outlined"
-                    fullWidth
-                    value={formValue.name}
-                    onChange={handleFormChange}
-                    onBlur={() => validateForm("name")}
-                    error={!!errors.name}
-                    helperText={errors.name}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "gray",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "gray",
-                      },
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "gray",
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name="code"
-                    label="GIFT_CODE"
-                    variant="outlined"
-                    fullWidth
-                    value={formValue.code}
-                    onChange={handleFormChange}
-                    onBlur={() => validateForm("code")}
-                    error={!!errors.code}
-                    helperText={errors.code}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "gray",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "gray",
-                      },
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "gray",
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name="discountPercentage"
-                    label="DISCOUNT RATE"
-                    variant="outlined"
-                    fullWidth
-                    value={formValue.discountPercentage}
-                    onChange={handleFormChange}
-                    onBlur={() => validateForm("discountPercentage")}
-                    error={!!errors.discountPercentage}
-                    helperText={errors.discountPercentage}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "gray",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "gray",
-                        },
-                      },
-                      "& .MuiInputLabel-root": {
-                        color: "gray",
-                      },
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "gray",
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="Start Date and Time"
-                      value={formValue.validFrom}
-                      onChange={(newValue) =>
-                        handleDateChange(newValue, "validFrom")
-                      }
-                      inputFormat="MM/DD/YYYY hh:mm a"
-                      className="w-full"
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} textAlign="right">
+                    <IconButton onClick={handleCloseDialog} >
+                      <CloseIcon sx={{ color: 'red' }}  />
+                    </IconButton>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="images"
+                      label="Image URL"
+                      variant="outlined"
+                      fullWidth
+                      value={formValue.images}
+                      onChange={handleFormChange}
+                      onBlur={() => validateForm("images")}
+                      error={!!errors.images}
+                      helperText={errors.images}
                       sx={{
-                        width: "100%",
                         "& .MuiOutlinedInput-root": {
                           "& fieldset": {
                             borderColor: "gray",
@@ -294,32 +176,20 @@ export const Events = () => {
                           color: "gray",
                         },
                       }}
-                      components={{
-                        TextField: (props) => (
-                          <TextField
-                            {...props}
-                            error={Boolean(errors.validFrom)}
-                            helperText={
-                              errors.validFrom ? errors.validFrom : ""
-                            }
-                          />
-                        ),
-                      }}
                     />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid item xs={12}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      label="End Date and Time"
-                      value={formValue.validUntil}
-                      onChange={(newValue) =>
-                        handleDateChange(newValue, "validUntil")
-                      }
-                      inputFormat="MM/DD/YYYY hh:mm a"
-                      className="w-full"
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="name"
+                      label="Name"
+                      variant="outlined"
+                      fullWidth
+                      value={formValue.name}
+                      onChange={handleFormChange}
+                      onBlur={() => validateForm("name")}
+                      error={!!errors.name}
+                      helperText={errors.name}
                       sx={{
-                        width: "100%",
                         "& .MuiOutlinedInput-root": {
                           "& fieldset": {
                             borderColor: "gray",
@@ -338,53 +208,146 @@ export const Events = () => {
                           color: "gray",
                         },
                       }}
-                      components={{
-                        TextField: (props) => (
-                          <TextField
-                            {...props}
-                            error={Boolean(errors.validUntil)}
-                            helperText={
-                              errors.validUntil ? errors.validUntil : ""
-                            }
-                          />
-                        ),
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="code"
+                      label="GIFT_CODE"
+                      variant="outlined"
+                      fullWidth
+                      value={formValue.code}
+                      onChange={handleFormChange}
+                      onBlur={() => validateForm("code")}
+                      error={!!errors.code}
+                      helperText={errors.code}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "gray",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "gray",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "gray",
+                          },
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: "gray",
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "gray",
+                        },
                       }}
                     />
-                  </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="discountPercentage"
+                      label="DISCOUNT RATE"
+                      variant="outlined"
+                      fullWidth
+                      value={formValue.discountPercentage}
+                      onChange={handleFormChange}
+                      onBlur={() => validateForm("discountPercentage")}
+                      error={!!errors.discountPercentage}
+                      helperText={errors.discountPercentage}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "gray",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "gray",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "gray",
+                          },
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: "gray",
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "gray",
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DateTimePicker
+                        label="Start Date and Time"
+                        value={formValue.validFrom}
+                        onChange={(newValue) =>
+                          handleDateChange(newValue, "validFrom")
+                        }
+                        inputFormat="MM/DD/YYYY hh:mm a"
+                        className="w-full"
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            fullWidth
+                            error={!!errors.validFrom}
+                            helperText={errors.validFrom}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DateTimePicker
+                        label="End Date and Time"
+                        value={formValue.validUntil}
+                        onChange={(newValue) =>
+                          handleDateChange(newValue, "validUntil")
+                        }
+                        inputFormat="MM/DD/YYYY hh:mm a"
+                        className="w-full"
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            fullWidth
+                            error={!!errors.validUntil}
+                            helperText={errors.validUntil}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} textAlign="center">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      sx={{
+                        bgcolor: "#0B4CBB",
+                        color: "white",
+                        fontWeight: "bold",
+                        "&:hover": {
+                          bgcolor: "darkorange",
+                        },
+                        "&:focus": {
+                          bgcolor: "black",
+                        },
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                      width: "100%",
-                      mt: 2,
-                      bgcolor: "#0B4CBB",
-                      color: "white",
-                      fontWeight: "bold",
-                      height: "40px", // Adjust height as needed
-                      padding: "8px",
-                      "&:hover": {
-                        bgcolor: "darkorange",
-                      },
-                      "&:focus": {
-                        bgcolor: "black",
-                      },
-                    }}
-                  >
-                    Create Event
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </Box>
-        </Modal>
+              </form>
+            </Box>
+          </Modal>
+        </div>
+        <div className="p-5">
+          <EventTable />
+        </div>
       </div>
-      <EventTable />
-    </div>
-    <ToastContainer />
+      <ToastContainer />
     </>
-    
   );
 };
+
+export default Events;
