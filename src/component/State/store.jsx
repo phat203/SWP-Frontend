@@ -15,6 +15,7 @@ import buybackReducer from "./Buyback/Reducer";
 import couponReducer from "./Event/Reducer";
 import dashboardReducer from "./DashBoard/Reducer";
 import warrantyReducer from "./Warranty/Reducer";
+import { policyReducer } from "./Policy/Reducer";
 
 const rootReducer = combineReducers({
   auth : authReducer,
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
   buyback : buybackReducer,
   coupon: couponReducer,
   dashboard: dashboardReducer,
-  warranty : warrantyReducer
+  warranty : warrantyReducer,
+  policy : policyReducer
   
 });
 

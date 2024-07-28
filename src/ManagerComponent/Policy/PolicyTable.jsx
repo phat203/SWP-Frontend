@@ -24,6 +24,7 @@ import Update from './Update' ;
 import CreatePolicy from "./CreatePolicy";
 import SearchIcon from '@mui/icons-material/Search';  // Add this import for SearchIcon
 import UpgradeIcon from "@mui/icons-material/Upgrade";
+import { getAllPolicies } from "../../component/State/Policy/Action";
 
 
 const PolicyTable = () => {
@@ -33,10 +34,10 @@ const PolicyTable = () => {
   const { components } = useSelector((state) => state.component);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const [showNoComponentAlert, setShowNoComponentAlert] = useState(false); // State for showing no component alert
-
+  const [ setShowNoComponentAlert] = useState(false); // State for showing no component alert
+  const policy = useSelector((state) => state.policy);
   useEffect(() => {
-    dispatch(getAllComponent({ jwt }));
+    dispatch(getAllPolicies(jwt));
   }, [dispatch, jwt]);
 
   const handleOpen = () => setOpen(true);
@@ -77,7 +78,7 @@ const PolicyTable = () => {
               <CreateIcon />
             </IconButton>
           }
-          title={"Ingredients"}
+          title={"Policy"}
           sx={{
             pt: 2,
             pb: 1,
@@ -154,20 +155,12 @@ const PolicyTable = () => {
                     Name
                   </Typography>
                 </TableCell>
-                <TableCell align="left">
+                <TableCell align="center">
                   <Typography
                     variant="subtitle1"
                     sx={{ fontWeight: "bold", color: "white" }}
                   >
-                    Price
-                  </Typography>
-                </TableCell>
-                <TableCell align="left">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
-                    Price BuyBack
+                    Description
                   </Typography>
                 </TableCell>
                 <TableCell align="left">
@@ -181,7 +174,7 @@ const PolicyTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredComponents.map((item, index) => (
+              {policy.policies.map((item, index) => (
                 <TableRow
                   key={item.id}
                   sx={{
@@ -193,8 +186,7 @@ const PolicyTable = () => {
                     {index + 1}
                   </TableCell>
                   <TableCell align="left">{item.name}</TableCell>
-                  <TableCell align="left">{item.price}</TableCell>
-                  <TableCell align="left">{item.pricebuyback}</TableCell>
+                  <TableCell align="left">{item.description}</TableCell>
                   <TableCell align="left">
                     <IconButton
                       onClick={() => handleUpdateClick(item)}

@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
-import { useDispatch, useSelector } from "react-redux";
-import { updateOrderStatus } from "../State/AreaOrder/Action";
-import { getUsersOrders } from "../State/Order/Action";
-
 import {
   Box,
   Card,
@@ -26,7 +20,16 @@ import {
   TextField,
   IconButton,
   Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import { useDispatch, useSelector } from "react-redux";
+import { updateOrderStatus } from "../State/AreaOrder/Action";
+import { getUsersOrders } from "../State/Order/Action";
 
 export default function OrderCard() {
   const { order } = useSelector((store) => store);
@@ -41,15 +44,22 @@ export default function OrderCard() {
     dispatch(getUsersOrders(jwt));
   }, [dispatch, jwt]);
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', day: '2-digit',month: '2-digit', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+  
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [openDialog, setOpenDialog] = useState(false);
   const ordersPerPage = 10;
   const open = Boolean(anchorEl);
-  //window.scrollTo(9,9);
 
   const handleClick = (event, orderId) => {
     setAnchorEl(event.currentTarget);
@@ -91,9 +101,18 @@ export default function OrderCard() {
     setCurrentPage(value);
   };
 
+  const handleRowClick = (order) => {
+    setSelectedOrder(order);
+    setOpenDialog(true);
+  };
+
+  const closeDialog = () => {
+    setOpenDialog(false);
+    setSelectedOrder(null);
+  };
+
   const startIndex = (currentPage - 1) * ordersPerPage;
   const currentOrders = filteredOrders.slice(startIndex, startIndex + ordersPerPage);
-
 
   return (
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
@@ -200,6 +219,24 @@ export default function OrderCard() {
                     Stall
                   </Typography>
                 </TableCell>
+
+                <TableCell align="center">
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: "bold", color: "white" }}
+                >
+                  Discount
+                </Typography>
+              </TableCell>
+
+              <TableCell align="center">
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontWeight: "bold", color: "white" }}
+                  >
+                  Creation Date
+                  </Typography>
+                </TableCell>
                 <TableCell align="center">
                   <Typography
                     variant="subtitle1"
@@ -227,11 +264,14 @@ export default function OrderCard() {
                       "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
                       "&:hover": { backgroundColor: "#e0e0e0" },
                     }}
+                    onClick={() => handleRowClick(order)}
                   >
                     <TableCell sx={{ fontWeight: "bold" }}>{order.id}</TableCell>
                     <TableCell align="center">{order.customer.fullname}</TableCell>
                     <TableCell align="center">{order.totalPrice}</TableCell>
                     <TableCell align="center">{order.areaName}</TableCell>
+                    <TableCell align="center">{order.items[0].discountPercentage}%</TableCell>
+                    <TableCell align="center">{formatDate(order.createdAt)}</TableCell>
                     <TableCell align="center">
                       <Typography
                         variant="body2"
@@ -301,6 +341,43 @@ export default function OrderCard() {
           />
         </Box>
       </Card>
+
+      <Dialog open={openDialog} onClose={closeDialog} fullWidth maxWidth="md">
+        <DialogTitle>Order Details</DialogTitle>
+        <DialogContent>
+          {selectedOrder && (
+            <>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Code</TableCell>
+                      <TableCell align="center">Name</TableCell>
+                      <TableCell align="center">Quantity</TableCell>
+                      <TableCell align="center">Total Price</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {selectedOrder.items.map((item) => (
+                      <TableRow key={item.id}>
+                     <TableCell>{item.jewelry.code}</TableCell>
+                        <TableCell align="center">{item.jewelry.name}</TableCell>
+                        <TableCell align="center">{item.quantity}</TableCell>
+                        <TableCell align="center">{item.totalPrice}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

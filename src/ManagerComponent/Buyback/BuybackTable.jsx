@@ -16,6 +16,11 @@ import {
   IconButton,
   CardHeader,
   Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import format from "date-fns/format";
 import SearchIcon from "@mui/icons-material/Search";
@@ -29,7 +34,10 @@ export default function BuyBackTable() {
   const [showNoResults, setShowNoResults] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 10;
-  window.scrollTo(9, 9);
+
+  const [selectedBuyback, setSelectedBuyback] = useState(null);
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     dispatch(getAllBuyback({ jwt }));
   }, [dispatch, jwt]);
@@ -63,6 +71,16 @@ export default function BuyBackTable() {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+  };
+
+  const handleRowClick = (buybackItem) => {
+    setSelectedBuyback(buybackItem);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedBuyback(null);
   };
 
   const startIndex = (currentPage - 1) * ordersPerPage;
@@ -159,7 +177,9 @@ export default function BuyBackTable() {
                     sx={{
                       "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
                       "&:hover": { backgroundColor: "#e0e0e0" },
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleRowClick(buybackItem)}
                   >
                     <TableCell
                       component="th"
@@ -201,6 +221,71 @@ export default function BuyBackTable() {
           </Box>
         </TableContainer>
       </Card>
+
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle>Buyback Details</DialogTitle>
+        <DialogContent>
+          {selectedBuyback ? (
+            <Box>
+             
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      {["ID", "Name", "Gold Weight", "Diamond Weight","Price" ].map((header) => (
+                        <TableCell key={header} align="center">
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ fontWeight: "bold" }}
+                          >
+                            {header}
+                          </Typography>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow
+                      key={selectedBuyback.jewelry.id}
+                      sx={{
+                        "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
+                        "&:hover": { backgroundColor: "#e0e0e0" },
+                      }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ fontWeight: "bold", color: "black" }}
+                      >
+                        {selectedBuyback.jewelry.id}
+                      </TableCell>
+                      <TableCell align="center" sx={{ color: "black" }}>
+                        {selectedBuyback.jewelry.name}
+                      </TableCell>
+                      <TableCell align="center" sx={{ color: "black" }}>
+                        {selectedBuyback.jewelry.goldWeight}
+                      </TableCell>
+                      <TableCell align="center" sx={{ color: "black" }}>
+                        {selectedBuyback.jewelry.diamondWeight}
+                      </TableCell>
+                      <TableCell align="center" sx={{ color: "black" }}>
+                        {selectedBuyback.buybackPrice}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          ) : (
+            <Typography>No details available</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

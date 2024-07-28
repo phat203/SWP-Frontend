@@ -18,6 +18,11 @@ import {
   RadioGroup,
   FormControlLabel,
   Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { getALLsOrders } from "../../component/State/Order/Action";
@@ -32,6 +37,10 @@ export default function OrdersTable({ filter }) {
   const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 12;
+  
+  const [orderItems, setOrderItems] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getALLsOrders(jwt));
@@ -61,6 +70,18 @@ export default function OrdersTable({ filter }) {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+  };
+
+  const handleRowClick = (order) => {
+    setSelectedOrder(order);
+    setOrderItems(order.items);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedOrder(null);
+    setOrderItems([]);
   };
 
   const formatDate = (dateString) => {
@@ -190,6 +211,15 @@ export default function OrdersTable({ filter }) {
                     Stall
                   </Typography>
                 </TableCell>
+
+                <TableCell align="center">
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: "bold", color: "white" }}
+                >
+                  Discount
+                </Typography>
+              </TableCell>
                 <TableCell align="center">
                   <Typography
                     variant="subtitle1"
@@ -224,7 +254,9 @@ export default function OrdersTable({ filter }) {
                     sx={{
                       "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
                       "&:hover": { backgroundColor: "#e0e0e0" },
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleRowClick(order)}
                   >
                     <TableCell
                       component="th"
@@ -238,6 +270,7 @@ export default function OrdersTable({ filter }) {
                     </TableCell>
                     <TableCell align="center">{order.totalPrice}</TableCell>
                     <TableCell align="center">{order.areaName}</TableCell>
+                    <TableCell align="center">{order.items[0].discountPercentage}%</TableCell>
                     <TableCell align="center">{formatDate(order.createdAt)}</TableCell>
                     <TableCell align="center">
                       <Typography
@@ -266,6 +299,83 @@ export default function OrdersTable({ filter }) {
           />
         </Box>
       </Card>
+
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle>Order Items</DialogTitle>
+        <DialogContent>
+          {orderItems.length === 0 ? (
+            <Typography variant="body1" sx={{ fontStyle: "italic" }}>
+              No items found for this order.
+            </Typography>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        Item ID
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        Jewelry
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        Quantity
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        Price
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {orderItems.map((item) => (
+                    <TableRow
+                      key={item.id}
+                      sx={{
+                        "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
+                        "&:hover": { backgroundColor: "#e0e0e0" },
+                      }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {item.jewelry.code}
+                      </TableCell>
+                      <TableCell align="center">
+                        {item.jewelry.name}
+                      </TableCell>
+                      <TableCell align="center">{item.quantity}</TableCell>
+                      <TableCell align="center">{item.totalPrice}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
