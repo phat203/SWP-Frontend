@@ -96,7 +96,7 @@ const AdminSidebar = () => {
                                 onClick={() => handleNavigate(item)}
                                 sx={{
                                     '&:hover': {
-                                        backgroundColor:"#003366",
+                                        backgroundColor:"#91BAFF",
                                     },
                                     transition: 'all 0.3s',
                                     mb: 1,

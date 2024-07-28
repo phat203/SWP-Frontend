@@ -14,6 +14,7 @@ import {
   TableRow,
   Typography,
   TextField,
+  Pagination,  // Import Pagination
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -21,12 +22,15 @@ import {
   deleteStaffUser,
 } from "../../component/State/Authentication/Action";
 import { Delete } from "@mui/icons-material";
+
 export default function StaffTable() {
   const dispatch = useDispatch();
   const { auth } = useSelector((store) => store);
   const jwt = localStorage.getItem("jwt");
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const staffPerPage = 10;  // Number of staff members per page
 
   useEffect(() => {
     dispatch(getAllStaffUser(jwt));
@@ -38,10 +42,19 @@ export default function StaffTable() {
     }
   };
 
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
   // Filtered staff based on search term
   const filteredStaff = auth.users.filter((user) =>
     user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Pagination logic
+  const indexOfLastStaff = currentPage * staffPerPage;
+  const indexOfFirstStaff = indexOfLastStaff - staffPerPage;
+  const currentStaff = filteredStaff.slice(indexOfFirstStaff, indexOfLastStaff);
 
   return (
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
@@ -153,8 +166,8 @@ export default function StaffTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredStaff.length > 0 ? (
-                filteredStaff.map((row) => (
+              {currentStaff.length > 0 ? (
+                currentStaff.map((row) => (
                   <TableRow
                     key={row.username}
                     sx={{
@@ -188,6 +201,14 @@ export default function StaffTable() {
               )}
             </TableBody>
           </Table>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, pb: 2 }}>
+            <Pagination
+              count={Math.ceil(filteredStaff.length / staffPerPage)}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
         </TableContainer>
       </Card>
     </Box>

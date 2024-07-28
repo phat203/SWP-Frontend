@@ -20,6 +20,7 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CheckIcon from "@mui/icons-material/Check";
@@ -38,6 +39,9 @@ export default function StaffTableA() {
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   useEffect(() => {
     dispatch(getAllBanUsers(jwt));
   }, [dispatch, jwt]);
@@ -78,6 +82,15 @@ export default function StaffTableA() {
 
   const filteredStaff = auth.users.filter((user) =>
     user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  const paginatedStaff = filteredStaff.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   return (
@@ -152,7 +165,7 @@ export default function StaffTableA() {
                     variant="subtitle1"
                     sx={{ fontWeight: "bold", color: "white" }}
                   >
-                    userName
+                    Username
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
@@ -190,8 +203,8 @@ export default function StaffTableA() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredStaff.length > 0 ? (
-                filteredStaff.map((row) => (
+              {paginatedStaff.length > 0 ? (
+                paginatedStaff.map((row) => (
                   <TableRow
                     key={row.username}
                     sx={{
@@ -208,7 +221,6 @@ export default function StaffTableA() {
                     <TableCell align="center">{row.username}</TableCell>
                     <TableCell align="center">{row.gender}</TableCell>
                     <TableCell align="center">{row.role}</TableCell>
-
                     <TableCell align="right">{row.email}</TableCell>
                     <TableCell align="right">
                       <IconButton onClick={() => handleOpenDialog(row.id)}>
@@ -226,6 +238,14 @@ export default function StaffTableA() {
               )}
             </TableBody>
           </Table>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, pb: 2 }}>
+            <Pagination
+              count={Math.ceil(filteredStaff.length / itemsPerPage)}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
         </TableContainer>
       </Card>
       <Dialog open={open} onClose={handleCloseDialog} sx={{ borderRadius: 2 }}>

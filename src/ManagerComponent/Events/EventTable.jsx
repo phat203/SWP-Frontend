@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer,CardHeader, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography, TextField, InputAdornment, Box, Alert } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, CardHeader, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography, TextField, InputAdornment, Box, Alert, Pagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCoupons, deleteCoupon } from '../../component/State/Event/Action';
 import format from 'date-fns/format';
@@ -14,6 +14,8 @@ const EventTable = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [couponToDelete, setCouponToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     dispatch(getCoupons(jwt));
@@ -38,20 +40,29 @@ const EventTable = () => {
     event.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const paginatedEvents = filteredEvents.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
-       <CardHeader
-          title={"Events"}
-          sx={{
-            pt: 2,
-            pb: 1,
-            textAlign: "center",
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            backgroundColor: "#0B4CBB",
-            color: "#fff",
-          }}
-        />
+      <CardHeader
+        title={"Events"}
+        sx={{
+          pt: 2,
+          pb: 1,
+          textAlign: "center",
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          backgroundColor: "#0B4CBB",
+          color: "#fff",
+        }}
+      />
       <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
         <TextField
           label="Search by Event Name"
@@ -92,12 +103,6 @@ const EventTable = () => {
           }}
         />
       </Box>
-
-      {/* {filteredEvents.length === 0 && (
-        <Alert severity="warning" sx={{ mb: 3, mx: 15, color: 'white', backgroundColor: '#FF5D5D', '& .MuiAlert-icon': { color: 'white' } }}>
-          No events found!
-        </Alert>
-      )} */}
 
       <Table>
         <TableHead>
@@ -140,8 +145,8 @@ const EventTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event, index) => (
+          {paginatedEvents.length > 0 ? (
+            paginatedEvents.map((event, index) => (
               <TableRow key={index} sx={{
                 "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
                 "&:hover": { backgroundColor: "#e0e0e0" },
@@ -172,8 +177,16 @@ const EventTable = () => {
           )}
         </TableBody>
       </Table>
-      
-      {/* Delete confirmation dialog */}
+
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2, pb: 2 }}>
+        <Pagination
+          count={Math.ceil(filteredEvents.length / itemsPerPage)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
+
       <Dialog open={openDeleteDialog} onClose={handleDeleteCancel}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
