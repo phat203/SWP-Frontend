@@ -2,26 +2,29 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@m
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createComponent, updateComponent } from '../../component/State/Components/Action';
+import { updatePolicy } from '../../component/State/Policy/Action';
+import { toast } from 'react-toastify';
 
 const Update = ({ component, onClose }) => {
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
-        price: component.price,
-        pricebuyback: component.pricebuyback,
+        description : component.description,
     });
 
     const jwt = localStorage.getItem("jwt");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = {
+        const policyDetails = {
             id: component.id, // Lấy id của component từ props
             name: component.name,
-            price: formData.price,
-            pricebuyback: formData.pricebuyback,
+            description : formData.description,
         };
 
-        dispatch(updateComponent({data, jwt }));
+        dispatch(updatePolicy(policyDetails, jwt ));
+        dispatch(updatePolicy(policyDetails, jwt ));
+        toast.success("update successfully!", {
+            autoClose: 500,});
         onClose(); // Đóng modal sau khi cập nhật thành công
     };
 
@@ -41,27 +44,15 @@ const Update = ({ component, onClose }) => {
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <TextField
                         fullWidth
-                        id="price"
-                        name="price"
-                        label="Price"
+                        id="description"
+                        name="description"
+                        label="description"
                         variant="outlined"
                         onChange={handleInputChange}
-                        value={formData.price}
+                        value={formData.description}
                     />
-                    <TextField
-                        fullWidth
-                        id="pricebuyback"
-                        name="pricebuyback"
-                        label="Price Buyback"
-                        variant="outlined"
-                        onChange={handleInputChange}
-                        value={formData.pricebuyback}
-                    />
-
-                    
-
                     <Button variant="contained" type="submit">
-                        Update Category
+                        Update Policy
                     </Button>
                 </form>
             </div>

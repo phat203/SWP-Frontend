@@ -362,7 +362,7 @@ export default function OrdersTable({ filter }) {
                         {item.jewelry.name}
                       </TableCell>
                       <TableCell align="center">{item.quantity}</TableCell>
-                      <TableCell align="center">{item.totalPrice}</TableCell>
+                      <TableCell align="center">{item.jewelry.price}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

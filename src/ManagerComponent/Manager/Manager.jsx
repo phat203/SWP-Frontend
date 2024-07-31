@@ -35,8 +35,8 @@ export const Manager = () => {
                         <Route path='/' element={<Home />} />
                         <Route path='/dashboard' element={<Dashboard />} />
                         <Route path='/orders' element={<Orders />} />
-                        <Route path='/menu' element={<Menu />} />
-                        <Route path='/instock' element={<Instock />} />
+                        <Route path='/instock' element={<Menu />} />
+                        <Route path='/outstock' element={<Instock />} />
                         <Route path='/category' element={<Category />} />
                         <Route path='/ingredients' element={<Ingredients />} />
                         <Route path='/event' element={<Events />} />

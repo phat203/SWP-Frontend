@@ -63,15 +63,16 @@ export const createPolicy = (policy, jwt) => {
             dispatch({ type: CREATE_POLICY_SUCCESS, payload: data });
         } catch (error) {
             dispatch({ type: CREATE_POLICY_FAILURE, payload: error.message });
+            console.log("error",error)
         }
     };
 };
 
-export const updatePolicy = (id, policyDetails, jwt) => {
+export const updatePolicy = (policyDetails, jwt) => {
     return async (dispatch) => {
         dispatch({ type: UPDATE_POLICY_REQUEST });
         try {
-            const { data } = await api.put(`/api/policies/${id}`, policyDetails, {
+            const { data } = await api.put(`/api/policies/${policyDetails.id}`, policyDetails , {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },
@@ -79,6 +80,7 @@ export const updatePolicy = (id, policyDetails, jwt) => {
             dispatch({ type: UPDATE_POLICY_SUCCESS, payload: data });
         } catch (error) {
             dispatch({ type: UPDATE_POLICY_FAILURE, payload: error.message });
+            console.log("error",error);
         }
     };
 };

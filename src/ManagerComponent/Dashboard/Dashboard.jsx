@@ -7,7 +7,7 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePicker, DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ArcElement, Chart as ChartJS, Legend as ChartLegend, Tooltip as ChartTooltip, Title } from 'chart.js';
 import dayjs from "dayjs";
@@ -27,7 +27,8 @@ import {
   getDashboardBuybackStats,
   getDashboardBuybackStatsByAreas,
   getDashboardStats,
-  getDashboardStatsByAreas
+  getDashboardStatsByAreas,
+  getTopSellingProducts
 } from "../../component/State/DashBoard/Action";
 
 ChartJS.register(Title, ChartTooltip, ChartLegend, ArcElement);
@@ -43,8 +44,7 @@ const Dashboard = () => {
   const [errors, setErrors] = useState({});
 
   const { dashboard, area } = useSelector((store) => store);
-  const loading = useSelector((state) => state.dashboard.loading);
-  const error = useSelector((state) => state.dashboard.error);
+ 
 
   useEffect(() => {
     dispatch(getAllAreaAction(jwt));
@@ -74,6 +74,7 @@ const Dashboard = () => {
         jwt
       )
     );
+    dispatch(getTopSellingProducts(formattedStartDate, formattedEndDate, jwt));
   }, [dispatch, jwt, SDate, EDate, area.areas]);
 
   const validateDates = (newValue, field) => {
@@ -132,6 +133,7 @@ const Dashboard = () => {
           jwt
         )
       );
+      dispatch(getTopSellingProducts(formattedStartDate, formattedEndDate, jwt))
     }
   };
 
@@ -172,6 +174,40 @@ const Dashboard = () => {
     ]
   };
 
+  const order = {
+    labels: area.areas?.map((a) => a.name) || [], // Area names
+    datasets: [
+      {
+        label: 'Total Orders by Area',
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF'
+        ],
+        data: area.areas?.map((a) => dashboard.areas?.[a.id]?.totalAmount || 0) || []
+      }
+    ]
+  };
+
+  const Items = {
+    labels: area.areas?.map((a) => a.name) || [], // Area names
+    datasets: [
+      {
+        label: 'Total Orders by Area',
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF'
+        ],
+        data: area.areas?.map((a) => dashboard.areas?.[a.id]?.totalItems || 0) || []
+      }
+    ]
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       <Grid container spacing={3}>
@@ -181,7 +217,7 @@ const Dashboard = () => {
              Date Start
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
+              <DatePicker
                 label="Select Date Start"
                 value={startDate}
                 onChange={handleStartDateChange}
@@ -204,7 +240,7 @@ const Dashboard = () => {
               Date End
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
+              <DatePicker
                 label="Select Date End"
                 value={endDate}
                 onChange={handleEndDateChange}
@@ -259,33 +295,87 @@ const Dashboard = () => {
       </div>
 
       <Typography variant="h4" sx={{ mt: 4, color: '#3f51b5' }}>Statistics by Area</Typography>
-      <div style={{ marginTop: '20px' }}>
-        <ResponsiveContainer width="100%" height={400}>
-          <Doughnut
-            data={doughnutData}
-            options={{
-              plugins: {
-                title: {
-                  display: true,
-                  text: 'Total Orders by Area',
-                  font: {
-                    size: 20
+      <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+        <div style={{ flex: 1, margin: '0 10px' }}>
+          <ResponsiveContainer width="100%" height={400}>
+            <Doughnut
+              data={doughnutData}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: 'Total Orders by Area',
+                    font: {
+                      size: 20
+                    },
+                    color: '#3f51b5'
                   },
-                  color: '#3f51b5'
+                  legend: {
+                    display: true,
+                    position: 'right',
+                    labels: {
+                      color: '#333'
+                    }
+                  },
                 },
-                legend: {
-                  display: true,
-                  position: 'right',
-                  labels: {
-                    color: '#333'
-                  }
+              }}
+            />
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: 1, margin: '0 10px' }}>
+          <ResponsiveContainer width="100%" height={400}>
+            <Doughnut
+              data={order}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: 'Total Amount by Area',
+                    font: {
+                      size: 20
+                    },
+                    color: '#3f51b5'
+                  },
+                  legend: {
+                    display: true,
+                    position: 'right',
+                    labels: {
+                      color: '#333'
+                    }
+                  },
                 },
-              },
-            }}
-          />
-        </ResponsiveContainer>
+              }}
+            />
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: 1, margin: '0 10px' }}>
+          <ResponsiveContainer width="100%" height={400}>
+            <Doughnut
+              data={Items}
+              options={{
+                plugins: {
+                  title: {
+                    display: true,
+                    text: 'Total Items by Area',
+                    font: {
+                      size: 20
+                    },
+                    color: '#3f51b5'
+                  },
+                  legend: {
+                    display: true,
+                    position: 'right',
+                    labels: {
+                      color: '#333'
+                    }
+                  },
+                },
+              }}
+            />
+          </ResponsiveContainer>
+        </div>
       </div>
-
+      
       <Typography variant="h4" sx={{ mt: 4, color: '#3f51b5' }}>Area Breakdown</Typography>
       <TableContainer component={Paper} sx={{ marginTop: '20px' }}>
         <Table>
@@ -316,21 +406,20 @@ const Dashboard = () => {
           <TableHead>
             <TableRow>
               <TableCell>Product</TableCell>
-              <TableCell align="right">Total Orders</TableCell>
-              <TableCell align="right">Total Amount</TableCell>
-              <TableCell align="right">Total Items</TableCell>
+              <TableCell align="Center">Jewelry Code</TableCell>
+              <TableCell align="Center">Total</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {area.areas?.map((a) => (
-              <TableRow key={a.id}>
-                <TableCell>{a.name}</TableCell>
-                <TableCell align="right">{dashboard.areas?.[a.id]?.totalOrders || 0}</TableCell>
-                <TableCell align="right">{dashboard.areas?.[a.id]?.totalAmount || 0}</TableCell>
-                <TableCell align="right">{dashboard.areas?.[a.id]?.totalItems || 0}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+  {dashboard.topSellingProducts?.map((product, index) => (
+    <TableRow key={index}>
+      <TableCell>{product.jewelry.name}</TableCell>
+      <TableCell>{product.jewelry.code}</TableCell> 
+      <TableCell align="Center">{product.totalQuantity}</TableCell> 
+          </TableRow>
+          ))}
+        </TableBody>
+
         </Table>
       </TableContainer>
       </div>

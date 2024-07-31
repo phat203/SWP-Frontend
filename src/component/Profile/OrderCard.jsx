@@ -62,6 +62,7 @@ export default function OrderCard() {
   const open = Boolean(anchorEl);
 
   const handleClick = (event, orderId) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedOrderId(orderId);
   };
@@ -93,7 +94,7 @@ export default function OrderCard() {
       (order) =>
         (filterStatus === "ALL" || order.orderStatus === filterStatus) &&
         order.customer.fullname.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ).reverse();
     setFilteredOrders(filtered);
   };
 
@@ -102,8 +103,10 @@ export default function OrderCard() {
   };
 
   const handleRowClick = (order) => {
-    setSelectedOrder(order);
-    setOpenDialog(true);
+    if (order.id !== selectedOrderId) {
+      setSelectedOrder(order);
+      setOpenDialog(true);
+    }
   };
 
   const closeDialog = () => {
@@ -262,87 +265,49 @@ export default function OrderCard() {
                     key={order.id}
                     sx={{
                       "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
-                      "&:hover": { backgroundColor: "#e0e0e0" },
+                      "&:hover": { backgroundColor: "#e0e0e0", cursor: "pointer" },
                     }}
                     onClick={() => handleRowClick(order)}
                   >
-                    <TableCell sx={{ fontWeight: "bold" }}>{order.id}</TableCell>
+                    <TableCell component="th" scope="row">
+                      {order.id}
+                    </TableCell>
                     <TableCell align="center">{order.customer.fullname}</TableCell>
-                    <TableCell align="center">{order.totalPrice}</TableCell>
+                    <TableCell align="center">{order.totalAmount}</TableCell>
                     <TableCell align="center">{order.areaName}</TableCell>
                     <TableCell align="center">{order.items[0].discountPercentage}%</TableCell>
                     <TableCell align="center">{formatDate(order.createdAt)}</TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: "bold",
-                          color: order.orderStatus === "COMPLETED" ? "green" : "red",
-                        }}
-                      >
-                        {order.orderStatus}
-                      </Typography>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: order.orderStatus === "PENDING" ? "red" : "green",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {order.orderStatus}
                     </TableCell>
                     <TableCell align="center">
                       <Button
-                        id="basic-button"
-                        aria-controls={open ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={(event) => handleClick(event, order.id)}
-                        sx={{
-                          color: "#fff",
-                          fontWeight: "bold",
-                          backgroundColor: "#0B4CBB",
-                          "&:hover": {
-                            backgroundColor: "#1976d2",
-                          },
-                        }}
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => handleClick(e, order.id)}
                       >
                         Update
                       </Button>
-                      <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open && selectedOrderId === order.id}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          "aria-labelledby": "basic-button",
-                        }}
-                      >
-                        {orderStatus.map((status) => (
-                          <MenuItem
-                            key={status.value}
-                            onClick={() => handleUpdateOrder(status.value)}
-                          >
-                            {status.label}
-                          </MenuItem>
-                        ))}
-                      </Menu>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} align="center">
-                    No found orders
+                  <TableCell colSpan={8} align="center">
+                    No orders found
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </TableContainer>
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 3, mb: 2 }}>
-          <Pagination
-            count={Math.ceil(filteredOrders.length / ordersPerPage)}
-            page={currentPage}
-            onChange={handlePageChange}
-            color="primary"
-          />
-        </Box>
-      </Card>
-
-      <Dialog open={openDialog} onClose={closeDialog} fullWidth maxWidth="md">
+          {openDialog && selectedOrder && (
+            <Dialog open={openDialog} onClose={closeDialog} fullWidth maxWidth="md">
         <DialogTitle>Order Details</DialogTitle>
         <DialogContent>
           {selectedOrder && (
@@ -378,6 +343,37 @@ export default function OrderCard() {
           </Button>
         </DialogActions>
       </Dialog>
+          )}
+        </TableContainer>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
+          <Pagination
+            count={Math.ceil(filteredOrders.length / ordersPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
+      </Card>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            width: "20ch",
+          },
+        }}
+      >
+        {orderStatus.map((status) => (
+          <MenuItem
+            key={status.value}
+            selected={status.value === filterStatus}
+            onClick={() => handleUpdateOrder(status.value)}
+          >
+            {status.label}
+          </MenuItem>
+        ))}
+      </Menu>
     </Box>
   );
 }

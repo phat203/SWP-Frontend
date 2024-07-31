@@ -7,32 +7,24 @@ import {
   import { useDispatch } from "react-redux";
   import { toast, ToastContainer } from "react-toastify";
   import { createComponent } from "../../component/State/Components/Action";
+import { createPolicy } from "../../component/State/Policy/Action";
   
   const CreatePolicy = () => {
     const dispatch = useDispatch();
     const [formData, setFormData, ] = useState({
       name: "",
-      price: "",
-      pricebuyback: "",
+      description: "",
     });
     const [error, setError] = useState('');
     const jwt = localStorage.getItem("jwt");
   
     const validateForm = () => {
-      if (!formData.name || formData.price === "" || formData.pricebuyback === "") {
+      if (!formData.name || formData.description === "") {
         setError('All fields are required.');
         return false;
       }
-      if (formData.name.startsWith(' ') || formData.price.toString().startsWith(' ') || formData.pricebuyback.toString().startsWith(' ')) {
+      if (formData.name.startsWith(' ') || formData.description.toString().startsWith(' ')) {
         setError('Fields cannot start with a space.');
-        return false;
-      }
-      if (isNaN(formData.price) || isNaN(formData.pricebuyback)) {
-        setError('Price and Price Buyback must be numbers.');
-        return false;
-      }
-      if (formData.price < 0 || formData.pricebuyback < 0) { // Updated condition to allow 0
-        setError('Price and Price Buyback must be non-negative numbers.');
         return false;
       }
       setError('');
@@ -43,15 +35,14 @@ import {
       e.preventDefault();
       if (!validateForm()) return;
   
-      const data = {
+      const policy = {
         name: formData.name,
-        price: formData.price,
-        pricebuyback: formData.pricebuyback,
+        description: formData.description,
       };
   
       try {
-        await dispatch(createComponent({ data, jwt }));
-        console.log("Ingredient created:", data);
+        await dispatch(createPolicy(policy, jwt));
+        console.log("Ingredient created:", policy);
         toast.success("Category created successfully!");
       } catch (error) {
         if (error.response && error.response.data && error.response.data.message) {
@@ -114,40 +105,12 @@ import {
             />
             <TextField
               fullWidth
-              id="price"
-              name="price"
-              label="Price"
+              id="description"
+              name="description"
+              label="description"
               variant="outlined"
               onChange={handleInputChange}
-              value={formData.price}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "gray",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "gray",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "gray",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  color: "gray",
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "gray",
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              id="pricebuyback"
-              name="pricebuyback"
-              label="Price Buyback"
-              variant="outlined"
-              onChange={handleInputChange}
-              value={formData.pricebuyback}
+              value={formData.description}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
@@ -188,7 +151,7 @@ import {
                 },
               }}
             >
-              Create Category
+              Create Policy
             </Button>
           </form>
         </div>

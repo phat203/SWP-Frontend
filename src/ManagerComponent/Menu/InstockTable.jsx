@@ -44,7 +44,7 @@ const InstockTable = () => {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showNoItemAlert, setShowNoItemAlert] = useState(false);
+  const [setShowNoItemAlert] = useState(false);
   const [filteredMenuItems, setFilteredMenuItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 12;
@@ -55,11 +55,11 @@ const InstockTable = () => {
 
   useEffect(() => {
     setFilteredMenuItems(
-      menu.menuItems.filter((item) =>
+      menu.outOfStock.filter((item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm, menu.menuItems]);
+  }, [searchTerm, menu.outOfStock]);
 
   const handleRefresh = () => {
     dispatch(updateJewelryPrice({ jwt }));
@@ -283,8 +283,8 @@ const InstockTable = () => {
                     <TableCell align="center">{row.code}</TableCell>
                     <TableCell align="right">{row.name}</TableCell>
                     <TableCell align="right">
-                      {row.type ? row.type.name : "N/A"}
-                    </TableCell>
+                    {row.jewelryCategory.name}
+                  </TableCell>
                     <TableCell align="center">
                       {row.components
                         ? row.components.map((component) => component.name).join(", ")
