@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { CartItem } from "./CartItem";
+import  CartItem  from "./CartItem";
 import { useNavigate } from "react-router-dom";
 import { Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";

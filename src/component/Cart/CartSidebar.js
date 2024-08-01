@@ -1,10 +1,9 @@
 import React from "react";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
+import { Drawer, Button, Typography, Divider, Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { findCart, removeCartItem, updateCartItem } from "../State/Cart/Action";
-import { CartItem } from "./CartItem";
+import  CartItem  from "./CartItem";
 
 const CartSidebar = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
@@ -37,22 +36,64 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
     return (
         <Drawer anchor="right" open={isOpen} onClose={onClose}>
-            <div className="w-80 p-4 flex flex-col h-full">
-                <h2 className="text-xl font-semibold">Cart</h2>
-                <div className="flex-grow">
-                    {cart.cart?.items.map((item) => (
-                        <CartItem key={item.id} item={item} />
-                    ))}
-                </div>
+            <Box
+                sx={{
+                    width: 320,
+                    p: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    backgroundColor: '#fff',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                    borderRadius: '8px 0 0 8px',
+                }}
+            >
+                <Typography
+                    variant="h5"
+                    component="div"
+                    gutterBottom
+                    sx={{ fontWeight: 'bold', color: '#333' }}
+                >
+                    Your Cart
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Box sx={{ flexGrow: 1, overflowY: 'auto', mt: 2 }}>
+                    {cart.cart?.items.length > 0 ? (
+                        cart.cart.items.map((item) => (
+                            <CartItem
+                                key={item.id}
+                                item={item}
+                                onRemove={() => handleRemoveCartItem(item.id)}
+                                onUpdateQuantity={(value) => handleUpdateCartItem(item, value)}
+                            />
+                        ))
+                    ) : (
+                        <Typography variant="body1" color="textSecondary">
+                            Your cart is empty.
+                        </Typography>
+                    )}
+                </Box>
+                <Divider sx={{ mt: 2, mb: 2 }} />
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={handleCheckout}
-                    className="mt-4"
+                    sx={{
+                        mt: 2,
+                        backgroundColor: '#007bff',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        '&:hover': {
+                            backgroundColor: '#0056b3',
+                        },
+                        borderRadius: 2,
+                        boxShadow: 'none',
+                        textTransform: 'none',
+                    }}
                 >
-                    Checkout
+                    Proceed to Checkout
                 </Button>
-            </div>
+            </Box>
         </Drawer>
     );
 };

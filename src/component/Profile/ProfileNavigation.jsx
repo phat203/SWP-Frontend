@@ -69,7 +69,7 @@ const ProfileNavigation = ({ open, handleClose }) => {
         "& .MuiDrawer-paper": {
           width: isSmallScreen ? "50vw" : "20vw",
           boxSizing: "border-box",
-          backgroundColor: "#F1EEEB",
+          backgroundColor: "#FFFFFF",
         },
       }}
     >
