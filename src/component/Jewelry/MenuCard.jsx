@@ -103,9 +103,19 @@ const MenuCart = ({ item }) => {
             variant="contained"
             onClick={handleAddItemToCart}
             fullWidth
-            color="primary"
             startIcon={<AddShoppingCartIcon />}
-            sx={{ fontWeight: "bold" }}
+            sx={{
+              mt: 2,
+              backgroundColor: '#007bff',
+              color: '#fff',
+              fontWeight: 'bold',
+              '&:hover': {
+                  backgroundColor: '#0056b3',
+              },
+              borderRadius: 2,
+              boxShadow: 'none',
+              textTransform: 'none',
+          }}
           >
             Add to Cart
           </Button>
