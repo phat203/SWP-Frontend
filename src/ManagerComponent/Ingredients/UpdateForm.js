@@ -1,15 +1,10 @@
 import {
   Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  createComponent,
   updateComponent,
 } from "../../component/State/Components/Action";
 
@@ -19,28 +14,42 @@ const UpdateForm = ({ component, onClose }) => {
     price: component.price,
     pricebuyback: component.pricebuyback,
   });
+  const [error, setError] = useState('');
 
   const jwt = localStorage.getItem("jwt");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
-      id: component.id, // Lấy id của component từ props
+      id: component.id,
       name: component.name,
       price: formData.price,
       pricebuyback: formData.pricebuyback,
     };
 
     dispatch(updateComponent({ data, jwt }));
-    onClose(); // Đóng modal sau khi cập nhật thành công
+    onClose();
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let errorMessage = '';
+
+    if (value.trim() === '') {
+      errorMessage = 'Values cannot be empty or contain only spaces.';
+    } else if (isNaN(value) || value < 0) {
+      errorMessage = 'Values must be non-negative numbers.';
+    } else if (name === 'price' && parseFloat(value) <= parseFloat(formData.pricebuyback)) {
+      errorMessage = 'Price must be greater than Price Buyback.';
+    } else if (name === 'pricebuyback' && parseFloat(value) >= parseFloat(formData.price)) {
+      errorMessage = 'Price Buyback must be less than Price.';
+    }
+
     setFormData({
       ...formData,
       [name]: value,
     });
+    setError(errorMessage);
   };
 
   return (
@@ -61,6 +70,8 @@ const UpdateForm = ({ component, onClose }) => {
             variant="outlined"
             onChange={handleInputChange}
             value={formData.price}
+            error={!!error}
+            helperText={error}
           />
           <TextField
             fullWidth
@@ -70,9 +81,11 @@ const UpdateForm = ({ component, onClose }) => {
             variant="outlined"
             onChange={handleInputChange}
             value={formData.pricebuyback}
+            error={!!error}
+            helperText={error}
           />
 
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" disabled={!!error}>
             Update Category
           </Button>
         </form>

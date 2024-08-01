@@ -1,12 +1,11 @@
 import {
-    Alert,
-    Button,
-    TextField
-  } from "@mui/material";
-  import React, { useState } from "react";
-  import { useDispatch } from "react-redux";
-  import { toast, ToastContainer } from "react-toastify";
-  import { createComponent } from "../../component/State/Components/Action";
+  Alert,
+  Button,
+  TextField
+} from "@mui/material";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
 import { createPolicy } from "../../component/State/Policy/Action";
   
   const CreatePolicy = () => {
@@ -71,7 +70,7 @@ import { createPolicy } from "../../component/State/Policy/Action";
             className="text-black text-center text-xl pb-10"
             style={{ fontSize: "30px" }}
           >
-            Create Ingredient
+            Create Policy
           </h1>
           {error && <Alert severity="error">{error}</Alert>}
           <form className="space-y-5" onSubmit={handleSubmit}>

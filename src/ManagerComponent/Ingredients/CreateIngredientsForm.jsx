@@ -35,6 +35,10 @@ const CreateIngredientsForm = () => {
       setError('Price and Price Buyback must be non-negative numbers.');
       return false;
     }
+    if (parseFloat(formData.price) <= parseFloat(formData.pricebuyback)) {
+      setError('Price must be greater than Price Buyback.');
+      return false;
+    }
     setError('');
     return true;
 };
