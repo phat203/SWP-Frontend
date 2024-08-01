@@ -25,6 +25,7 @@ import {
   Create as CreateIcon,
   Search as SearchIcon,
 } from "@mui/icons-material";
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -286,7 +287,7 @@ const MenuTable = () => {
                   <TableCell align="right">{row.price}</TableCell>
                   <TableCell align="right">
                     <IconButton onClick={() => handleClickOpen(row)}>
-                      <DoDisturbOnIcon />
+                      <DeleteSweepIcon sx={{ color: "red",fontSize: 30  }} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

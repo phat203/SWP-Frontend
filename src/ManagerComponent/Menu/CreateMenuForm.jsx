@@ -516,7 +516,7 @@ const CreateMenuForm = () => {
                         Create
                     </Button>
                 </form>
-                <Link to={'/manager/jewelry/menu'}>
+                <Link to={'/manager/jewelry/instock'}>
               <Button
                 variant="outlined"
                 t

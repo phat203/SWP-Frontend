@@ -18,6 +18,7 @@ import {
   InputAdornment,
   Pagination, // Import Pagination
 } from "@mui/material";
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import { useSelector, useDispatch } from "react-redux";
 import { getAllComponent } from "../../component/State/Components/Action";
 import UpdateForm from "./UpdateForm";
@@ -205,7 +206,7 @@ const IngredientTable = () => {
                       aria-label="update"
                       sx={{ color: "red", width: 60, height: 60 }} // Adjust the width and height to make the button larger
                     >
-                      <UpgradeIcon sx={{ fontSize: 40 }} />
+                      <ArrowCircleUpIcon sx={{color: "green" , fontSize: 30 }} />
                     </IconButton>
                   </TableCell>
                 </TableRow>

@@ -22,6 +22,7 @@ import {
   Box,
   Pagination,
 } from "@mui/material";
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCoupons,
@@ -288,12 +289,12 @@ const EventTable = () => {
                 </TableCell>
                 <TableCell align="center">
                   <IconButton onClick={() => handleUpdateClick(event)}>
-                    <Edit />
+                    <ArrowCircleUpIcon sx={{ color: "green",fontSize: 30  }} />
                   </IconButton>
                   </TableCell>
                   <TableCell>
                   <IconButton onClick={() => handleDeleteClick(event.id)}>
-                    <Delete />
+                    <Delete sx={{ color: "red",fontSize: 30  }}/>
                   </IconButton>
                 </TableCell>
               </TableRow>

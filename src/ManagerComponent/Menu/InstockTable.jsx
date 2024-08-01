@@ -25,7 +25,7 @@ import {
   Refresh as RefreshIcon,
   Search as SearchIcon,
 } from "@mui/icons-material";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -50,7 +50,7 @@ const InstockTable = () => {
   const ordersPerPage = 12;
 
   useEffect(() => {
-    dispatch(getOutOfStockItems({jwt}));
+    dispatch(getOutOfStockItems({ jwt }));
   }, [dispatch, jwt]);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const InstockTable = () => {
             progress: undefined,
           });
           setTimeout(() => {
-            window.location.reload(); 
+            window.location.reload();
           }, 1000);
         })
         .catch((error) => {
@@ -120,7 +120,10 @@ const InstockTable = () => {
   // Calculate the items to display for the current page
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = filteredMenuItems.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = filteredMenuItems.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
 
   return (
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
@@ -263,46 +266,59 @@ const InstockTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentOrders
-                .map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{
-                      "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
-                      "&:hover": { backgroundColor: "#e0e0e0" },
-                      transition: "background-color 0.3s",
-                    }}
-                  >
-                    <TableCell component="th" scope="row">
-                      <img
-                        src={row.images}
-                        alt="Product Image"
-                        style={{ width: 50, height: 50, borderRadius: 4 }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">{row.code}</TableCell>
-                    <TableCell align="right">{row.name}</TableCell>
-                    <TableCell align="right">
+              {currentOrders.map((row) => (
+                <TableRow
+                  key={row.name}
+                  sx={{
+                    "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
+                    "&:hover": { backgroundColor: "#e0e0e0" },
+                    transition: "background-color 0.3s",
+                  }}
+                >
+                  <TableCell component="th" scope="row">
+                    <img
+                      src={row.images}
+                      alt="Product Image"
+                      style={{ width: 50, height: 50, borderRadius: 4 }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">{row.code}</TableCell>
+                  <TableCell align="right">{row.name}</TableCell>
+                  <TableCell align="right">
                     {row.jewelryCategory.name}
                   </TableCell>
-                    <TableCell align="center">
-                      {row.components
-                        ? row.components.map((component) => component.name).join(", ")
-                        : "N/A"}
-                    </TableCell>
-                    <TableCell align="right">{row.price} VND</TableCell>
-                    <TableCell align="center">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon />}
-                        onClick={() => handleClickOpen(row)}
-                      >
-                        Add
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                  <TableCell align="center">
+                    {row.components
+                      ? row.components
+                          .map((component) => component.name)
+                          .join(", ")
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell align="right">{row.price} USD</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<AddIcon />}
+                      onClick={() => handleClickOpen(row)}
+                      sx={{
+                        backgroundColor: "#4caf50", // Custom background color
+                        color: "#ffffff", // Text color
+                        fontWeight: "bold", // Bold text
+                        borderRadius: "8px", // Rounded corners
+                        textTransform: "none", // Keep text case as is
+                        padding: "8px 16px", // Custom padding
+                        transition: "background-color 0.3s ease", // Smooth transition for hover
+                        "&:hover": {
+                          backgroundColor: "#388e3c", // Darker shade on hover
+                        },
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -328,9 +344,7 @@ const InstockTable = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Add Item to Stock"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Add Item to Stock"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Are you sure you want to add this item back to stock?
