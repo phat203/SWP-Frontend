@@ -159,7 +159,7 @@ console.error("error:", error);
   
       toast.success("Coupon applied successfully!",{
         autoClose: 500,
-      }); // Hiển thị thông báo thành công
+      }); 
       setCouponCode(""); // Xóa mã giảm giá sau khi áp dụng
     } catch (error) {
       if (

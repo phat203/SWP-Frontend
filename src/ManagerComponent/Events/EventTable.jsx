@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCoupons, deleteCoupon, updateCoupon } from '../../component/State/Event/Action';
 import format from 'date-fns/format';
 import SearchIcon from '@mui/icons-material/Search';
+import { toast } from "react-toastify";
 
 const EventTable = () => {
   const dispatch = useDispatch();
@@ -57,15 +58,19 @@ const EventTable = () => {
   };
 
   const handleUpdateConfirm = () => {
-    dispatch(updateCoupon({
-      id: couponToUpdate.id,
+    const couponData = {
       name: updatedName,
       images: updatedImage,
       validFrom: new Date(updatedValidFrom).toISOString(),
       validUntil: new Date(updatedValidUntil).toISOString(),
       code: updatedCode,
       discountPercentage: updatedDiscountPercentage
-    }, jwt));
+    }
+    dispatch(updateCoupon(couponToUpdate.id,
+      couponData, jwt));
+      toast.success("Update Event Success",{
+        autoClose: 500,
+      }); 
     setOpenUpdateDialog(false);
   };
 
@@ -195,10 +200,10 @@ const EventTable = () => {
                     <img src={event.images} alt="Event" style={{ width: '100px', height: 'auto', borderRadius: '8px' }} />
                   )}
                 </TableCell>
-                <TableCell>{format(new Date(event.validFrom), 'dd/MM/yyyy HH:mm')}</TableCell>
-                <TableCell>{format(new Date(event.validUntil), 'dd/MM/yyyy HH:mm')}</TableCell>
                 <TableCell>{event.code}</TableCell>
                 <TableCell>{event.discountPercentage}%</TableCell>
+                <TableCell>{format(new Date(event.validFrom), 'dd/MM/yyyy HH:mm')}</TableCell>
+                <TableCell>{format(new Date(event.validUntil), 'dd/MM/yyyy HH:mm')}</TableCell>
                 <TableCell align="center">
                   <IconButton onClick={() => handleUpdateClick(event)}>
                     <Edit />
@@ -259,6 +264,23 @@ const EventTable = () => {
               sx={{ mb: 2 }}
             />
             <TextField
+              label="Code"
+              variant="outlined"
+              fullWidth
+              value={updatedCode}
+              onChange={(e) => setUpdatedCode(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Discount Percentage"
+              type="number"
+              variant="outlined"
+              fullWidth
+              value={updatedDiscountPercentage}
+              onChange={(e) => setUpdatedDiscountPercentage(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
               label="Valid From"
               type="datetime-local"
               variant="outlined"
@@ -274,23 +296,6 @@ const EventTable = () => {
               fullWidth
               value={updatedValidUntil}
               onChange={(e) => setUpdatedValidUntil(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Code"
-              variant="outlined"
-              fullWidth
-              value={updatedCode}
-              onChange={(e) => setUpdatedCode(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Discount Percentage"
-              type="number"
-              variant="outlined"
-              fullWidth
-              value={updatedDiscountPercentage}
-              onChange={(e) => setUpdatedDiscountPercentage(e.target.value)}
               sx={{ mb: 2 }}
             />
           </DialogContent>

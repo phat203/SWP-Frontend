@@ -396,7 +396,6 @@ const Dashboard = () => {
           </TableRow>
           ))}
         </TableBody>
-
         </Table>
       </TableContainer>
       </div>
