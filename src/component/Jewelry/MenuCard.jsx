@@ -66,6 +66,7 @@ const MenuCart = ({ item }) => {
           <img
             src={item.images[0]}
             alt={item.name}
+            
             style={{
               width: isSmallScreen ? "4rem" : "5rem",
               height: isSmallScreen ? "4rem" : "5rem",

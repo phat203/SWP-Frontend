@@ -88,7 +88,7 @@ export const Events = () => {
     if (validateForm()) {
       try {
         console.log("submit ", formValue);
-        await dispatch(createCoupon(formValue, jwt));
+        await dispatch(updateCoupon(formValue, jwt));
         setFormValue(initialValue);
         toast.success("Coupon created successfully!");
         handleClose();
