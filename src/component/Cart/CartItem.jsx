@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, IconButton } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useDispatch, useSelector } from "react-redux";
 import { findCart, removeCartItem, updateCartItem } from "../State/Cart/Action";
 
@@ -82,7 +83,7 @@ const CartItem = ({ item }) => {
         </Box>
       </Box>
       <IconButton size="small" onClick={handleRemoveCartItem}>
-        <RemoveCircleOutlineIcon color="error" />
+        <DeleteOutlineIcon color="error" />
       </IconButton>
     </Box>
   );
