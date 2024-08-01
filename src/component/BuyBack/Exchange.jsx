@@ -74,6 +74,7 @@ const Buy = () => {
   return (
     <div>
       <Navbar/>
+      <div className="mt-28">
     <Box
     display="flex"
     flexDirection="column"
@@ -351,6 +352,7 @@ const Buy = () => {
         </Box>
       </Modal>
     </Box>
+    </div>
     </div>
   );
 };
