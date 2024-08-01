@@ -1,37 +1,36 @@
 import { Delete, Edit } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
+  Box,
+  Button,
   CardHeader,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Button,
-  Typography,
-  TextField,
+  IconButton,
   InputAdornment,
-  Box,
   Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
 } from "@mui/material";
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import format from "date-fns/format";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
-  getCoupons,
   deleteCoupon,
+  getCoupons,
   updateCoupon,
 } from "../../component/State/Event/Action";
-import format from "date-fns/format";
-import SearchIcon from "@mui/icons-material/Search";
-import { toast } from "react-toastify";
 
 const EventTable = () => {
   const dispatch = useDispatch();
@@ -94,6 +93,69 @@ const EventTable = () => {
   };
 
   const handleUpdateConfirm = () => {
+    // Check for empty fields
+    if (!updatedName) {
+      toast.error("Name is required", { autoClose: 1000 });
+      return;
+    }
+    if (!updatedImage) {
+      toast.error("Image URL is required", { autoClose: 1000 });
+      return;
+    }
+    if (!updatedCode) {
+      toast.error("Code is required", { autoClose: 1000 });
+      return;
+    }
+    if (!updatedDiscountPercentage) {
+      toast.error("Discount percentage cannot be empty", { autoClose: 1000 });
+      return;
+    }
+    
+    if (isNaN(updatedDiscountPercentage)) {
+      toast.error("Discount percentage must be a number", { autoClose: 1000 });
+      return;
+    }
+    
+    if (updatedDiscountPercentage <= 0) {
+      toast.error("Discount percentage must be a positive number", { autoClose: 1000 });
+      return;
+    }
+    if (!updatedValidFrom) {
+      toast.error("Valid from date is required", { autoClose: 1000 });
+      return;
+    }
+    if (!updatedValidUntil) {
+      toast.error("Valid until date is required", { autoClose: 1000 });
+      return;
+    }
+    if (new Date(updatedValidFrom) >= new Date(updatedValidUntil)) {
+      toast.error("Valid from date must be before valid until date", { autoClose: 1000 });
+      return;
+    }
+
+    // Check for leading spaces
+    if (updatedName.trim() !== updatedName) {
+      toast.error("Name should not have leading spaces", { autoClose: 1000 });
+      return;
+    }
+    if (updatedImage.trim() !== updatedImage) {
+      toast.error("Image URL should not have leading spaces", { autoClose: 1000 });
+      return;
+    }
+    if (updatedCode.trim() !== updatedCode) {
+      toast.error("Code should not have leading spaces", { autoClose: 1000 });
+      return;
+    }
+    
+    if (updatedCode !== updatedCode.toUpperCase()) {
+      toast.error("Code must be in uppercase", { autoClose: 1000 });
+      return;
+    }
+    
+    if (/\s/.test(updatedCode)) {
+      toast.error("Code should not contain spaces", { autoClose: 1000 });
+      return;
+    }
     const couponData = {
       name: updatedName,
       images: updatedImage,
@@ -289,12 +351,12 @@ const EventTable = () => {
                 </TableCell>
                 <TableCell align="center">
                   <IconButton onClick={() => handleUpdateClick(event)}>
-                    <ArrowCircleUpIcon sx={{ color: "green",fontSize: 30  }} />
+                    <Edit />
                   </IconButton>
                   </TableCell>
                   <TableCell>
                   <IconButton onClick={() => handleDeleteClick(event.id)}>
-                    <Delete sx={{ color: "red",fontSize: 30  }}/>
+                    <Delete />
                   </IconButton>
                 </TableCell>
               </TableRow>
