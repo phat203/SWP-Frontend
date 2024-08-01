@@ -8,11 +8,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { styled } from '@mui/system';
 import BlockIcon from '@mui/icons-material/Block';
 import logo from '../../assets/logo.png';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
 const menu = [
     { title: "Home", icon: <Home />, path: "/" },
     { title: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
     { title: "User", icon: <Group />, path: "/user" },
-    { title: "Block", icon: <BlockIcon />, path: "/ban" },
+    { title: "Block", icon: <PersonOffIcon />, path: "/ban" },
     { title: "Logout", icon: <Logout sx={{ color: 'red' }} />, path: "/logout" },
 ];
 

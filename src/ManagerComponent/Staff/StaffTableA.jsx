@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import BlockIcon from "@mui/icons-material/Block";
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import {
   getAllStaffAndManagerUsers,
   banUser,
@@ -96,7 +97,7 @@ export default function StaffTableA() {
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
       <Card sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
         <CardHeader
-          title={"Staff"}
+          title={"User"}
           sx={{
             pt: 2,
             pb: 1,
@@ -224,7 +225,7 @@ export default function StaffTableA() {
                     <TableCell align="right">{row.email}</TableCell>
                     <TableCell align="right">
                       <IconButton onClick={() => handleOpenDialog(row.id)}>
-                        <BlockIcon />
+                      <PersonRemoveIcon  sx={{ color: "red" }}/>
                       </IconButton>
                     </TableCell>
                   </TableRow>

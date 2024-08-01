@@ -70,7 +70,7 @@ const UserProfile = () => {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ color: "red", fontFamily: "Roboto, sans-serif" }}
+            sx={{ color: "red", fontFamily: "Roboto, sans-serif",fontSize: "20px" ,fontWeight: "bold" }}
           >
             {auth.user ? auth.user.areaName : "Area Name"}
           </Typography>

@@ -244,6 +244,14 @@ const EventTable = () => {
                 Actions
               </Typography>
             </TableCell>
+            <TableCell align="center">
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
+                Delete
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -282,6 +290,8 @@ const EventTable = () => {
                   <IconButton onClick={() => handleUpdateClick(event)}>
                     <Edit />
                   </IconButton>
+                  </TableCell>
+                  <TableCell>
                   <IconButton onClick={() => handleDeleteClick(event.id)}>
                     <Delete />
                   </IconButton>

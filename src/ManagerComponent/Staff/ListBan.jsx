@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import {
   Box,
   Card,
@@ -224,7 +225,7 @@ export default function StaffTableA() {
                     <TableCell align="right">{row.email}</TableCell>
                     <TableCell align="right">
                       <IconButton onClick={() => handleOpenDialog(row.id)}>
-                        <CheckIcon />
+                      <SettingsBackupRestoreIcon sx={{ color: "red" }}/>
                       </IconButton>
                     </TableCell>
                   </TableRow>

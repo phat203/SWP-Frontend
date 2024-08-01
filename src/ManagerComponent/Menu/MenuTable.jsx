@@ -115,7 +115,7 @@ const MenuTable = () => {
     <Box sx={{ padding: 3, minHeight: "100vh" }}>
       <Card sx={{ mt: 2, boxShadow: 3, borderRadius: 2 }}>
         <CardHeader
-          title={"Menu"}
+          title={"Instock"}
           action={
             <>
               <IconButton
