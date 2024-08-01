@@ -19,14 +19,15 @@ import {
   DialogTitle,
   Button,
   TextField,
+  Pagination,
 } from "@mui/material";
 import {
   Refresh as RefreshIcon,
   Create as CreateIcon,
   Search as SearchIcon,
 } from "@mui/icons-material";
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import DoDisturbOnIcon from "@mui/icons-material/DoDisturbOn";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -34,8 +35,8 @@ import {
   updateJewelryPrice,
   instockItem,
 } from "../../component/State/Menu/Action";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MenuTable = () => {
   const { menu } = useSelector((store) => store);
@@ -48,6 +49,8 @@ const MenuTable = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMenuItems, setFilteredMenuItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     dispatch(getAllMenuItem({ jwt }));
@@ -59,7 +62,13 @@ const MenuTable = () => {
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
+    setCurrentPage(1);
   }, [searchTerm, menu.menuItems]);
+
+  const paginatedItems = filteredMenuItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleRefresh = () => {
     dispatch(updateJewelryPrice({ jwt }));
@@ -110,6 +119,10 @@ const MenuTable = () => {
   const handleDetailsClose = () => {
     setDetailsOpen(false);
     setSelectedItem(null);
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
   return (
@@ -259,7 +272,7 @@ const MenuTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredMenuItems.map((row) => (
+              {paginatedItems.map((row) => (
                 <TableRow
                   key={row.name}
                   sx={{
@@ -287,12 +300,12 @@ const MenuTable = () => {
                   <TableCell align="right">{row.price}</TableCell>
                   <TableCell align="right">
                     <IconButton onClick={() => handleClickOpen(row)}>
-                      <DeleteSweepIcon sx={{ color: "red",fontSize: 30  }}  />
+                      <DeleteSweepIcon sx={{ color: "red", fontSize: 30 }} />
                     </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
-              {searchTerm !== "" && filteredMenuItems.length === 0 && (
+              {searchTerm !== "" && paginatedItems.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} align="center">
                     No items match your search criteria.
@@ -302,7 +315,16 @@ const MenuTable = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
+          <Pagination
+            count={Math.ceil(filteredMenuItems.length / itemsPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
       </Card>
+
       <Dialog open={open} onClose={handleClose} sx={{ borderRadius: 2 }}>
         <DialogTitle>{"Confirm Out Of Stock"}</DialogTitle>
         <DialogContent>
@@ -319,33 +341,41 @@ const MenuTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
       {/* New dialog for showing item details */}
-      <Dialog open={detailsOpen} onClose={handleDetailsClose} sx={{ borderRadius: 2 }}>
+      <Dialog
+        open={detailsOpen}
+        onClose={handleDetailsClose}
+        sx={{ borderRadius: 2 }}
+      >
         <DialogTitle>{"Item Details"}</DialogTitle>
         <DialogContent>
-        {selectedItem && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Typography variant="h6">{selectedItem.name}</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Typography variant="subtitle1">
-                <strong>Gold Weight:</strong> {selectedItem.goldWeight} grams
-              </Typography>
-              <Typography variant="subtitle1">
-                <strong>Diamond Weight:</strong> {selectedItem.diamondWeight} carats
-              </Typography>
+          {selectedItem && (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Typography variant="h6">{selectedItem.name}</Typography>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                <Typography variant="subtitle1">
+                  <strong>Gold Weight:</strong> {selectedItem.goldWeight} grams
+                </Typography>
+                <Typography variant="subtitle1">
+                  <strong>Diamond Weight:</strong> {selectedItem.diamondWeight}{" "}
+                  carats
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        )}
-      </DialogContent>
+          )}
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleDetailsClose} color="primary">
             Close
           </Button>
         </DialogActions>
       </Dialog>
+
       <ToastContainer />
     </Box>
   );
 };
 
 export default MenuTable;
+
