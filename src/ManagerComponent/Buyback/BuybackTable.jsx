@@ -24,12 +24,16 @@ import {
 } from "@mui/material";
 import format from "date-fns/format";
 import SearchIcon from "@mui/icons-material/Search";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function BuyBackTable() {
   const { buyback } = useSelector((store) => store);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [filteredBuybacks, setFilteredBuybacks] = useState([]);
   const [showNoResults, setShowNoResults] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,21 +48,44 @@ export default function BuyBackTable() {
 
   useEffect(() => {
     handleSearch();
-  }, [searchTerm, buyback]);
+  }, [searchTerm, startDate, endDate, buyback]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setShowNoResults(false);
   };
 
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
+    if (endDate && new Date(e.target.value) > new Date(endDate)) {
+      toast.error("Start date cannot be later than end date.");
+    }
+  };
+
+  const handleEndDateChange = (e) => {
+    if (new Date(e.target.value) < new Date(startDate)) {
+      toast.error("End date cannot be earlier than start date.");
+    } else {
+      setEndDate(e.target.value);
+    }
+  };
+
   const handleSearch = () => {
-    const filtered = buyback?.buybacks.filter((buybackItem) =>
-      buybackItem.customer.fullname
+    const filtered = buyback?.buybacks.filter((buybackItem) => {
+      const matchesName = buybackItem.customer.fullname
         .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
+        .includes(searchTerm.toLowerCase());
+      const matchesStartDate = startDate
+        ? new Date(buybackItem.transactionDate) >= new Date(startDate)
+        : true;
+      const matchesEndDate = endDate
+        ? new Date(buybackItem.transactionDate) <= new Date(endDate)
+        : true;
+
+      return matchesName && matchesStartDate && matchesEndDate;
+    });
     setFilteredBuybacks(filtered);
-    if (searchTerm && filtered.length === 0) {
+    if ((searchTerm || startDate || endDate) && filtered.length === 0) {
       setShowNoResults(true);
     } else {
       setShowNoResults(false);
@@ -124,6 +151,68 @@ export default function BuyBackTable() {
               if (e.key === "Enter") {
                 handleSearch();
               }
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#0B4CBB",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#0B4CBB",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#0B4CBB",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "#0B4CBB",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#0B4CBB",
+              },
+            }}
+          />
+          <TextField
+            id="start-date-input"
+            label="Start Date"
+            type="date"
+            variant="outlined"
+            size="small"
+            value={startDate}
+            onChange={handleStartDateChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#0B4CBB",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#0B4CBB",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#0B4CBB",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: "#0B4CBB",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#0B4CBB",
+              },
+            }}
+          />
+          <TextField
+            id="end-date-input"
+            label="End Date"
+            type="date"
+            variant="outlined"
+            size="small"
+            value={endDate}
+            onChange={handleEndDateChange}
+            InputLabelProps={{
+              shrink: true,
             }}
             sx={{
               "& .MuiOutlinedInput-root": {

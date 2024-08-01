@@ -128,6 +128,9 @@ console.error("error:", error);
     try {
       await dispatch(addItemToCartByCode(reqData));
       setProductCode("");
+      toast.success("Item added to cart successfully!", {
+        autoClose: 500,
+      });
     } catch (error) {
       if (error.response && error.response.data) {
         toast.error(`${error.response.data}`); // Show specific error message
@@ -154,7 +157,9 @@ console.error("error:", error);
       // Tìm giỏ hàng sau khi áp dụng mã giảm giá
       await dispatch(findCart(localStorage.getItem("jwt")));
   
-      toast.success("Coupon applied successfully!"); // Hiển thị thông báo thành công
+      toast.success("Coupon applied successfully!",{
+        autoClose: 500,
+      }); // Hiển thị thông báo thành công
       setCouponCode(""); // Xóa mã giảm giá sau khi áp dụng
     } catch (error) {
       if (
