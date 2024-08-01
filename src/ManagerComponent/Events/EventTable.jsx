@@ -188,8 +188,12 @@ const EventTable = () => {
         setOpenUpdateDialog(false);
       })
       .catch((error) => {
-        toast.error("Update Event Failed", { autoClose: 500 });
+        if (error.response && error.response.data) {
+          toast.error(`${error.response.data}`);
+        } else {
+        toast.error("Update failed", { autoClose: 500 });
         setOpenUpdateDialog(false);
+      }
       });
   };
 

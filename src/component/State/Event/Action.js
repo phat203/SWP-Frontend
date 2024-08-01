@@ -74,6 +74,7 @@ export const updateCoupon = (id, couponData,jwt) => async dispatch => {
         dispatch({ type: UPDATE_COUPON_SUCCESS, payload: response.data });
     } catch (error) {
         dispatch({ type: UPDATE_COUPON_FAILURE, payload: error.message });
+        throw error;
     }
 };
 
