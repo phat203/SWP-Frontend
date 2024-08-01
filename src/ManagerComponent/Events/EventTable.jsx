@@ -20,7 +20,6 @@ import {
   TextField,
   InputAdornment,
   Box,
-  Alert,
   Pagination,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,8 +63,15 @@ const EventTable = () => {
   };
 
   const handleDeleteConfirm = () => {
-    dispatch(deleteCoupon(couponToDelete, jwt));
-    setOpenDeleteDialog(false);
+    dispatch(deleteCoupon(couponToDelete, jwt))
+      .then(() => {
+        toast.success("Delete Event Success", { autoClose: 500 });
+        setOpenDeleteDialog(false);
+      })
+      .catch((error) => {
+        toast.error("Delete Event Failed", { autoClose: 500 });
+        setOpenDeleteDialog(false);
+      });
   };
 
   const handleDeleteCancel = () => {
@@ -95,11 +101,15 @@ const EventTable = () => {
       code: updatedCode,
       discountPercentage: updatedDiscountPercentage,
     };
-    dispatch(updateCoupon(couponToUpdate.id, couponData, jwt));
-    toast.success("Update Event Success", {
-      autoClose: 500,
-    });
-    setOpenUpdateDialog(false);
+    dispatch(updateCoupon(couponToUpdate.id, couponData, jwt))
+      .then(() => {
+        toast.success("Update Event Success", { autoClose: 500 });
+        setOpenUpdateDialog(false);
+      })
+      .catch((error) => {
+        toast.error("Update Event Failed", { autoClose: 500 });
+        setOpenUpdateDialog(false);
+      });
   };
 
   const handleUpdateCancel = () => {
@@ -281,112 +291,30 @@ const EventTable = () => {
           ) : (
             <TableRow>
               <TableCell colSpan={7} align="center">
-                No events available
+                No events found.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2, pb: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
         <Pagination
           count={Math.ceil(filteredEvents.length / itemsPerPage)}
           page={currentPage}
           onChange={handlePageChange}
-          color="primary"
         />
       </Box>
 
-      {/* Update Dialog with Box */}
-      <Dialog
-        open={openUpdateDialog}
-        onClose={handleUpdateCancel}
-        PaperProps={{ sx: { borderRadius: 2 } }}
-      >
-        <Box
-          sx={{
-            position: "relative",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <DialogTitle sx={{ mb: 2 }}>Update Event</DialogTitle>
-          <DialogContent>
-            <TextField
-              label="Name"
-              variant="outlined"
-              fullWidth
-              value={updatedName}
-              onChange={(e) => setUpdatedName(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Image URL"
-              variant="outlined"
-              fullWidth
-              value={updatedImage}
-              onChange={(e) => setUpdatedImage(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Code"
-              variant="outlined"
-              fullWidth
-              value={updatedCode}
-              onChange={(e) => setUpdatedCode(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Discount Percentage"
-              type="number"
-              variant="outlined"
-              fullWidth
-              value={updatedDiscountPercentage}
-              onChange={(e) => setUpdatedDiscountPercentage(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Valid From"
-              type="datetime-local"
-              variant="outlined"
-              fullWidth
-              value={updatedValidFrom}
-              onChange={(e) => setUpdatedValidFrom(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Valid Until"
-              type="datetime-local"
-              variant="outlined"
-              fullWidth
-              value={updatedValidUntil}
-              onChange={(e) => setUpdatedValidUntil(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleUpdateCancel} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleUpdateConfirm} color="primary">
-              Update
-            </Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
-
-      {/* Delete Dialog */}
+      {/* Delete Confirmation Dialog */}
       <Dialog
         open={openDeleteDialog}
         onClose={handleDeleteCancel}
-        PaperProps={{ sx: { borderRadius: 2 } }}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
       >
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle id="delete-dialog-title">Confirm Delete</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText id="delete-dialog-description">
             Are you sure you want to delete this event?
           </DialogContentText>
         </DialogContent>
@@ -394,8 +322,89 @@ const EventTable = () => {
           <Button onClick={handleDeleteCancel} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDeleteConfirm} color="primary">
+          <Button
+            onClick={handleDeleteConfirm}
+            color="primary"
+            autoFocus
+            sx={{ color: "red" }}
+          >
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Update Dialog */}
+      <Dialog
+        open={openUpdateDialog}
+        onClose={handleUpdateCancel}
+        aria-labelledby="update-dialog-title"
+      >
+        <DialogTitle id="update-dialog-title">Update Event</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Update the event details below:</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            fullWidth
+            value={updatedName}
+            onChange={(e) => setUpdatedName(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Image URL"
+            fullWidth
+            value={updatedImage}
+            onChange={(e) => setUpdatedImage(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="GIFT_CODE"
+            fullWidth
+            value={updatedCode}
+            onChange={(e) => setUpdatedCode(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="DISCOUNT RATE"
+            fullWidth
+            value={updatedDiscountPercentage}
+            onChange={(e) => setUpdatedDiscountPercentage(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Start Date and Time"
+            type="datetime-local"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={updatedValidFrom}
+            onChange={(e) => setUpdatedValidFrom(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="End Date and Time"
+            type="datetime-local"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={updatedValidUntil}
+            onChange={(e) => setUpdatedValidUntil(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdateCancel} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleUpdateConfirm}
+            color="primary"
+            autoFocus
+            sx={{ color: "green" }}
+          >
+            Update
           </Button>
         </DialogActions>
       </Dialog>
