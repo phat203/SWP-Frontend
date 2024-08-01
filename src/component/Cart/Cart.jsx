@@ -1,5 +1,5 @@
 import AddCardIcon from "@mui/icons-material/AddCard";
-import {Link, useLocation} from "react-router-dom"
+import { Link, useLocation } from "react-router-dom";
 import {
   Box,
   Button,
@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import  CartItem  from "./CartItem";
+import CartItem from "./CartItem";
 import { useNavigate } from "react-router-dom";
 import { Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,9 +54,9 @@ const validationSchema = Yup.object({
     .matches(/^\S.*$/, "Cannot start with a space"),
   mobile: Yup.string()
     .required("Mobile is required")
-    .matches(/^[^\s].*[^\s]$/, 'Mobile cannot have spaces')
-      .length(10, 'Mobile must be exactly 10 characters')
-      .matches(/^\d+$/, 'Mobile must be a number'),
+    .matches(/^[^\s].*[^\s]$/, "Mobile cannot have spaces")
+    .length(10, "Mobile must be exactly 10 characters")
+    .matches(/^\d+$/, "Mobile must be a number"),
   email: Yup.string()
     .required("Email is required")
     .matches(/^\S.*$/, "Cannot start with a space"),
@@ -71,7 +71,7 @@ const Cart = () => {
   // const location = useLocation();
   // const { cart } = location.state || {};
   const dispatch = useDispatch();
-  const jwt =  localStorage.getItem("jwt")
+  const jwt = localStorage.getItem("jwt");
 
   const handleClose = () => setOpen(false);
 
@@ -105,7 +105,7 @@ const Cart = () => {
       } else {
         toast.error("Failed to create order. Please try again.");
       }
-console.error("error:", error);
+      console.error("error:", error);
     }
   };
 
@@ -147,25 +147,22 @@ console.error("error:", error);
       toast.error("Please enter a coupon code.");
       return;
     }
-  
+
     try {
       // Áp dụng mã giảm giá
       await dispatch(
         applyCoupon(cart.cart.id, couponCode, localStorage.getItem("jwt"))
       );
-  
+
       // Tìm giỏ hàng sau khi áp dụng mã giảm giá
       await dispatch(findCart(localStorage.getItem("jwt")));
-  
-      toast.success("Coupon applied successfully!",{
+
+      toast.success("Coupon applied successfully!", {
         autoClose: 500,
-      }); 
+      });
       setCouponCode(""); // Xóa mã giảm giá sau khi áp dụng
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data 
-      ) {
+      if (error.response && error.response.data) {
         toast.error(`${error.response.data}`); // Hiển thị thông báo lỗi cụ thể
       } else {
         toast.error("Failed to apply coupon. Please try again."); // Thông báo lỗi dự phòng
@@ -173,7 +170,6 @@ console.error("error:", error);
       console.error("Coupon apply error:", error);
     }
   };
-  
 
   const handleClearCart = () => {
     dispatch(clearCartAction());
@@ -197,8 +193,6 @@ console.error("error:", error);
     }
   };
 
-  
-  
   // const handleNavigateHome = (name, id) => {
   //   navigate(`/staff/jewelry/area/${name}/${id}`);
   // };
@@ -217,10 +211,9 @@ console.error("error:", error);
                 <Typography variant="h6" className="p-3">
                   Cart Items
                 </Typography>
-<Table>
+                <Table>
                   <TableHead>
                     <TableRow>
-
                       <TableCell align="center">Product</TableCell>
                       <TableCell align="center">Price</TableCell>
                       <TableCell align="center">Quantity</TableCell>
@@ -230,7 +223,9 @@ console.error("error:", error);
                     {cart.cartItems.map((item, index) => (
                       <TableRow key={`${item.id}-${index}`}>
                         <CartItem key={`${item.id}-${index}`} item={item} />
-                        <TableCell align="center">${item.originalPrice}</TableCell>
+                        <TableCell align="center">
+                          ${item.originalPrice}
+                        </TableCell>
                         <TableCell align="center">{item.quantity}</TableCell>
                       </TableRow>
                     ))}
@@ -295,7 +290,7 @@ console.error("error:", error);
                 onClick={handleAddToCart}
                 sx={{
                   color: "green",
-borderColor: "green",
+                  borderColor: "green",
                   fontWeight: "bold",
                   width: "120px",
                   "&:hover": {
@@ -388,7 +383,7 @@ borderColor: "green",
             >
               <Typography variant="h6" className="p-3">
                 Bill Details
-</Typography>
+              </Typography>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -400,7 +395,8 @@ borderColor: "green",
                   <TableRow>
                     <TableCell>Item Total</TableCell>
                     <TableCell align="right">
-                      ${cart.cart?.coupon
+                      $
+                      {cart.cart?.coupon
                         ? cart.cart.totalamount
                         : calculateTotal()}
                     </TableCell>
@@ -424,25 +420,25 @@ borderColor: "green",
           <Divider orientation="vertical" flexItem />
           <section className="lg:w-[60%] flex justify-center px-5 pb-0 lg:pb-0">
             <Box>
-              <Link to={'/staff/jewelry/area/sale/1'}>
-              <Button
-                variant="outlined"
-                // onClick={handleNavigateHome}
-                t
-                sx={{
-                  color: "red",
-                  borderColor: "red",
-                  fontWeight: "bold",
-                  width: "200px",
-                  marginTop: "10px",
-                  "&:hover": {
-                    borderColor: "darkred",
-                    backgroundColor: "lightcoral",
-                  },
-                }}
-              >
-                Go to Home
-              </Button>
+              <Link to={"/staff/jewelry/area/sale/1"}>
+                <Button
+                  variant="outlined"
+                  // onClick={handleNavigateHome}
+                  t
+                  sx={{
+                    color: "red",
+                    borderColor: "red",
+                    fontWeight: "bold",
+                    width: "200px",
+                    marginTop: "10px",
+                    "&:hover": {
+                      borderColor: "darkred",
+                      backgroundColor: "lightcoral",
+                    },
+                  }}
+                >
+                  Go to Home
+                </Button>
               </Link>
               <Typography
                 variant="h4"
@@ -472,7 +468,7 @@ borderColor: "green",
                 >
                   <AddCardIcon sx={{ fontSize: 40, color: "gray" }} />
                   <Box textAlign="center" color="gray">
-{/* <Typography variant="body1" gutterBottom>
+                    {/* <Typography variant="body1" gutterBottom>
                       Customer Information
                     </Typography> */}
                     <Button
@@ -493,7 +489,7 @@ borderColor: "green",
                     </Button>
                   </Box>
                 </Card>
-                <EventShow/>
+                <EventShow />
               </Box>
               {/* aaaaaa */}
             </Box>
