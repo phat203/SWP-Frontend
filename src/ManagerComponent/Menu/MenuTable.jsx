@@ -287,7 +287,7 @@ const MenuTable = () => {
                   <TableCell align="right">{row.price}</TableCell>
                   <TableCell align="right">
                     <IconButton onClick={() => handleClickOpen(row)}>
-                      <DeleteSweepIcon sx={{ color: "red",fontSize: 30  }} />
+                      <DeleteSweepIcon sx={{ color: "red",fontSize: 30  }}  />
                     </IconButton>
                   </TableCell>
                 </TableRow>

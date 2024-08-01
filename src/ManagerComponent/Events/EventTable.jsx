@@ -22,6 +22,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import format from "date-fns/format";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
