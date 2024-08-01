@@ -43,6 +43,7 @@ const MenuTable = () => {
   const jwt = localStorage.getItem("jwt");
 
   const [open, setOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false); // New state for the details dialog
   const [selectedItem, setSelectedItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMenuItems, setFilteredMenuItems] = useState([]);
@@ -96,6 +97,18 @@ const MenuTable = () => {
     if (searchTerm && filteredMenuItems.length === 0) {
       toast.info("No items match your search criteria.");
     }
+  };
+
+  // Function to handle details dialog open
+  const handleDetailsOpen = (item) => {
+    setSelectedItem(item);
+    setDetailsOpen(true);
+  };
+
+  // Function to handle details dialog close
+  const handleDetailsClose = () => {
+    setDetailsOpen(false);
+    setSelectedItem(null);
   };
 
   return (
@@ -256,9 +269,10 @@ const MenuTable = () => {
                 >
                   <TableCell component="th" scope="row">
                     <img
-                      src={row.images}
+                      src={row.images[0]} // Adjusted to use the first image URL
                       alt="Product Image"
                       style={{ width: 50, height: 50, borderRadius: 4 }}
+                      onClick={() => handleDetailsOpen(row)} // Open details dialog
                     />
                   </TableCell>
                   <TableCell align="center">{row.code}</TableCell>
@@ -301,6 +315,30 @@ const MenuTable = () => {
           </Button>
           <Button onClick={handleDelete} color="error" autoFocus>
             Out Of Stock
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* New dialog for showing item details */}
+      <Dialog open={detailsOpen} onClose={handleDetailsClose} sx={{ borderRadius: 2 }}>
+        <DialogTitle>{"Item Details"}</DialogTitle>
+        <DialogContent>
+          {selectedItem && (
+            <>
+              <DialogContentText>
+                <strong>Name:</strong> {selectedItem.name}
+              </DialogContentText>
+              <DialogContentText>
+                <strong>Gold Weight:</strong> {selectedItem.goldWeight} grams
+              </DialogContentText>
+              <DialogContentText>
+                <strong>Diamond Weight:</strong> {selectedItem.diamondWeight} carats
+              </DialogContentText>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDetailsClose} color="primary">
+            Close
           </Button>
         </DialogActions>
       </Dialog>
