@@ -1,4 +1,4 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -351,12 +351,12 @@ const EventTable = () => {
                 </TableCell>
                 <TableCell align="center">
                   <IconButton onClick={() => handleUpdateClick(event)}>
-                    <Edit />
+                  <ArrowCircleUpIcon sx={{ color: "green",fontSize: 30  }} />
                   </IconButton>
                   </TableCell>
                   <TableCell>
                   <IconButton onClick={() => handleDeleteClick(event.id)}>
-                    <Delete />
+                  <Delete sx={{ color: "red",fontSize: 30  }}/>
                   </IconButton>
                 </TableCell>
               </TableRow>
