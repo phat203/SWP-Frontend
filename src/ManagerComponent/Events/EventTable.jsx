@@ -1,4 +1,5 @@
 import { Delete } from "@mui/icons-material";
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
@@ -22,7 +23,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
 import format from "date-fns/format";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -94,6 +94,11 @@ const EventTable = () => {
   };
 
   const handleUpdateConfirm = () => {
+    const isValidDate = (dateString) => {
+      // Regular expression to check if the date is in YYYY-MM-DD format
+      const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
+      return regex.test(dateString);
+    };
     // Check for empty fields
     if (!updatedName) {
       toast.error("Name is required", { autoClose: 1000 });
@@ -125,10 +130,22 @@ const EventTable = () => {
       toast.error("Valid from date is required", { autoClose: 1000 });
       return;
     }
+    
     if (!updatedValidUntil) {
       toast.error("Valid until date is required", { autoClose: 1000 });
       return;
     }
+    
+    if (!isValidDate(updatedValidFrom)) {
+      toast.error("Valid from date format is invalid", { autoClose: 1000 });
+      return;
+    }
+    
+    if (!isValidDate(updatedValidUntil)) {
+      toast.error("Valid until date format is invalid", { autoClose: 1000 });
+      return;
+    }
+    
     if (new Date(updatedValidFrom) >= new Date(updatedValidUntil)) {
       toast.error("Valid from date must be before valid until date", { autoClose: 1000 });
       return;
