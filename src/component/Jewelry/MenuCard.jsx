@@ -35,7 +35,7 @@ const MenuCart = ({ item }) => {
     };
     dispatch(addItemToCart(reqData));
     toast.success("Item added to cart successfully!", {
-      autoClose: 500, // The toast will disappear after 1 second (1000 milliseconds)
+      autoClose: 500,
     });
     console.log("req Data", reqData);
   };
@@ -106,16 +106,16 @@ const MenuCart = ({ item }) => {
             startIcon={<AddShoppingCartIcon />}
             sx={{
               mt: 2,
-              backgroundColor: '#007bff',
-              color: '#fff',
-              fontWeight: 'bold',
-              '&:hover': {
-                  backgroundColor: '#0056b3',
+              backgroundColor: "#007bff",
+              color: "#fff",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: "#0056b3",
               },
               borderRadius: 2,
-              boxShadow: 'none',
-              textTransform: 'none',
-          }}
+              boxShadow: "none",
+              textTransform: "none",
+            }}
           >
             Add to Cart
           </Button>
@@ -124,14 +124,28 @@ const MenuCart = ({ item }) => {
       <Dialog open={showDialog} onClose={handleCloseDialog}>
         <DialogTitle>{item.code}</DialogTitle>
         <DialogContent>
-        <Typography variant="body2" color="textSecondary">
-        <img
-            src={item.images[0]}
-          />
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {item.name}
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={item.images[0]}
+              alt={item.name}
+              style={{
+                width: "100%",
+                maxWidth: "300px",
+                height: "auto",
+                borderRadius: "10%",
+                marginBottom: "1rem",
+              }}
+            />
+            <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1 }}>
+              {item.name}
+            </Typography>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">
