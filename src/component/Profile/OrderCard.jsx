@@ -78,14 +78,22 @@ export default function OrderCard() {
   };
 
   const handleUpdateOrder = (orderStatus) => {
-    dispatch(updateOrderStatus({ orderId: selectedOrderId, orderStatus, jwt }))
-      .then(() => {
-        dispatch(getUsersOrders(jwt));
-      })
-      .catch((error) => {
-        console.error("Failed to update order status", error);
-      });
-    handleClose();
+    if (selectedOrderId && orderStatus) {
+      dispatch(updateOrderStatus({ orderId: selectedOrderId, orderStatus, jwt }))
+        .then(() => {
+          dispatch(getUsersOrders(jwt));
+          toast.success("Order status updated successfully.",{
+            autoClose: 500,
+          });
+        })
+        .catch((error) => {
+          console.error("Failed to update order status", error);
+          toast.error("Failed to update order status."); // Optional: error message
+        });
+      handleClose();
+    } else {
+      toast.error("Order ID or status is missing.");
+    }
   };
 
   useEffect(() => {
@@ -162,8 +170,8 @@ export default function OrderCard() {
             sx={{ display: "flex", justifyContent: "center" }}
           >
             <FormControlLabel value="ALL" control={<Radio />} label="All" />
-            <FormControlLabel value="PENDING" control={<Radio />} label="Pending" />
-            <FormControlLabel value="COMPLETED" control={<Radio />} label="Completed" />
+            <FormControlLabel value="PENDING" control={<Radio />} label="PENDING" />
+            <FormControlLabel value="COMPLETED" control={<Radio />} label="COMPLETED" />
           </RadioGroup>
         </Box>
 
@@ -441,25 +449,29 @@ export default function OrderCard() {
         </Box>
       </Card>
       <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        PaperProps={{
-          style: {
-            width: "20ch",
-          },
-        }}
-      >
-        {orderStatus.map((status) => (
-          <MenuItem
-            key={status.value}
-            selected={status.value === filterStatus}
-            onClick={() => handleUpdateOrder(status.value)}
-          >
-            {status.label}
-          </MenuItem>
-        ))}
-      </Menu>
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          width: "20ch",
+        },
+      }}
+    >
+      {orderStatus.map((status) => (
+        <MenuItem
+          key={status.value}
+          selected={status.value === filterStatus}
+          onClick={() => {
+            // Kiểm tra và xử lý status.value tại đây
+            console.log("Selected status:", status.value);
+            handleUpdateOrder(status.value);
+          }}
+        >
+          {status.label}
+        </MenuItem>
+      ))}
+    </Menu>
     </Box>
   );
 }

@@ -3,12 +3,12 @@
 import { api } from "../../config/api";
 import { GET_AREA_ORDER_FAILURE, GET_AREA_ORDER_REQUEST, GET_AREA_ORDER_SUCCESS, UPDATE_ORDER_STATUS_FAILURE, UPDATE_ORDER_STATUS_REQUEST, UPDATE_ORDER_STATUS_SUCCESS } from "./ActionType";
 
-export const updateOrderStatus =  ({orderId,orderstatus,jwt}) => {
+export const updateOrderStatus =  ({orderId,orderStatus,jwt}) => {
     return async (dispatch) => {
         try {
             dispatch({type: UPDATE_ORDER_STATUS_REQUEST});
             const response = await api.put(
-                `/api/admin/orders/${orderId}/${orderstatus}`, {}, {
+                `/api/admin/orders/${orderId}/${orderStatus}`, {}, {
                     headers: {
                         Authorization: `Bearer ${jwt}`,
                     },
@@ -23,7 +23,7 @@ export const updateOrderStatus =  ({orderId,orderstatus,jwt}) => {
             });
         } catch (error) {
             console.log("catch error ",error)
-            console.log("order_status",orderstatus)
+            console.log("order_status",orderStatus)
             
             dispatch({ type: UPDATE_ORDER_STATUS_FAILURE, error});
         }
