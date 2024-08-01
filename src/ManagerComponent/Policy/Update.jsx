@@ -1,30 +1,38 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createComponent, updateComponent } from '../../component/State/Components/Action';
-import { updatePolicy } from '../../component/State/Policy/Action';
 import { toast } from 'react-toastify';
+import { updatePolicy } from '../../component/State/Policy/Action';
 
 const Update = ({ component, onClose }) => {
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
-        description : component.description,
+        description: component.description,
     });
 
     const jwt = localStorage.getItem("jwt");
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // Validate description
+        if (formData.description.trim() === '') {
+            toast.error("Description cannot be empty or contain only spaces.", {
+                autoClose: 500,
+            });
+            return;
+        }
+
         const policyDetails = {
             id: component.id, // Lấy id của component từ props
             name: component.name,
-            description : formData.description,
+            description: formData.description,
         };
 
-        dispatch(updatePolicy(policyDetails, jwt ));
-        dispatch(updatePolicy(policyDetails, jwt ));
-        toast.success("update successfully!", {
-            autoClose: 500,});
+        dispatch(updatePolicy(policyDetails, jwt));
+        toast.success("Update successfully!", {
+            autoClose: 500,
+        });
         onClose(); // Đóng modal sau khi cập nhật thành công
     };
 
@@ -35,7 +43,6 @@ const Update = ({ component, onClose }) => {
             [name]: value,
         });
     };
-
 
     return (
         <div className=''>
