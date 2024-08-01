@@ -39,6 +39,7 @@ const JewelryDetails = () => {
   const [priceRange, setPriceRange] = useState("");
   const [sortBy, setSortBy] = useState("price_low_to_high");
   const [searchQuery, setSearchQuery] = useState("");
+  const [actualSearchQuery, setActualSearchQuery] = useState(""); // New state for actual search query
   const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
@@ -58,6 +59,11 @@ const JewelryDetails = () => {
     dispatch(getMenuItemsByJewelryId({ jwt }));
   }, [dispatch, jwt]);
 
+  useEffect(() => {
+    // Trigger search when actualSearchQuery changes
+    dispatch(getMenuItemsByJewelryId({ jwt, query: actualSearchQuery }));
+  }, [actualSearchQuery, dispatch, jwt]);
+
   const handleFilter = (e) => {
     setJewelryType(e.target.value);
   };
@@ -72,6 +78,10 @@ const JewelryDetails = () => {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleSearchClick = () => {
+    setActualSearchQuery(searchQuery.trim()); // Update the actual search query state
   };
 
   const handlePageChange = (event, value) => {
@@ -95,7 +105,7 @@ const JewelryDetails = () => {
       }
     })
     .filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      !actualSearchQuery ? true : item.name.toLowerCase().includes(actualSearchQuery.toLowerCase()) // Check if actualSearchQuery is empty
     )
     .sort((a, b) => {
       switch (sortBy) {
@@ -152,7 +162,7 @@ const JewelryDetails = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <img
-                  className="w-full h-[40vh] object-cover rounded-lg shadow-md"
+                  className="w-full h-[30vh] object-cover rounded-lg shadow-md"
                   src={area.area?.images[0]}
                   alt=""
                 />
@@ -184,7 +194,7 @@ const JewelryDetails = () => {
               <div>
                 <div className="mb-4">
                   <Typography variant="h5" sx={{ color: "gray" }}>
-                    Search 
+                    Search
                   </Typography>
                   <div className="flex items-center">
                     <TextField
@@ -194,13 +204,12 @@ const JewelryDetails = () => {
                       value={searchQuery}
                       onChange={handleSearchChange}
                     />
-                    <IconButton>
+                    <IconButton onClick={handleSearchClick}>
                       <SearchIcon color="action" />
                     </IconButton>
                   </div>
                 </div>
                 <Divider />
-
                 <Typography variant="h5" sx={{ color: "gray" }}>
                   Sort By
                 </Typography>
@@ -219,7 +228,6 @@ const JewelryDetails = () => {
                   </Select>
                 </FormControl>
               </div>
-
               <Divider />
               <div>
                 <Typography variant="h5" sx={{ paddingBottom: "1rem" }}>
@@ -248,33 +256,55 @@ const JewelryDetails = () => {
                     <FormControlLabel
                       value="1000+"
                       control={<Radio sx={radioStyles} />}
-                      label="Over 1000 USD"
+                      label="1000 USD +"
                       onChange={() => handleFilterByPrice("1000+")}
                     />
                   </RadioGroup>
                 </FormControl>
               </div>
+              <Divider />
+              {/* <div>
+                <Typography variant="h5" sx={{ paddingBottom: "1rem" }}>
+                  Jewelry Type
+                </Typography>
+                <FormControl component={"fieldset"}>
+                  <RadioGroup
+                    value={jewelryType}
+                    onChange={handleFilter}
+                    aria-label="jewelry-type"
+                  >
+                    {jewelryTypes.map((type) => (
+                      <FormControlLabel
+                        key={type.value}
+                        value={type.value}
+                        control={<Radio sx={radioStyles} />}
+                        label={type.label}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </div> */}
             </div>
           </div>
-          <Grid container spacing={4} className="lg:w-60 lg:pl-10">
-            {paginatedItems.map((item) => (
-              <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
-                <div style={{ width: "100%", height: "100%" }}>
+          <div className="lg:w-[5%]"></div>
+          <div className="lg:w-[80%]">
+            <Grid container spacing={2}>
+              {paginatedItems.map((item) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                   <MenuCard item={item} />
-                </div>
-              </Grid>
-            ))}
-          </Grid>
+                </Grid>
+              ))}
+            </Grid>
+            <div className="mt-5 flex justify-center">
+              <Pagination
+                count={Math.ceil(filteredItems.length / ITEMS_PER_PAGE)}
+                page={currentPage}
+                onChange={handlePageChange}
+                sx={paginationStyles}
+              />
+            </div>
+          </div>
         </section>
-        <div className="flex justify-center mt-6">
-          <Pagination
-            count={Math.ceil(filteredItems.length / ITEMS_PER_PAGE)}
-            page={currentPage}
-            onChange={handlePageChange}
-            color="primary"
-            sx={paginationStyles}
-          />
-        </div>
       </div>
     </div>
   );
