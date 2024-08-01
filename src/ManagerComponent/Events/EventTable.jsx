@@ -228,85 +228,94 @@ const EventTable = () => {
         />
       </Box>
 
-      <Dialog open={openDeleteDialog} onClose={handleDeleteCancel}>
+      {/* Update Dialog with Box */}
+      <Dialog open={openUpdateDialog} onClose={handleUpdateCancel} PaperProps={{ sx: { borderRadius: 2 } }}>
+        <Box
+          sx={{
+            position: "relative",
+            width: 400,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <DialogTitle sx={{ mb: 2 }}>Update Event</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Name"
+              variant="outlined"
+              fullWidth
+              value={updatedName}
+              onChange={(e) => setUpdatedName(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Image URL"
+              variant="outlined"
+              fullWidth
+              value={updatedImage}
+              onChange={(e) => setUpdatedImage(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Valid From"
+              type="datetime-local"
+              variant="outlined"
+              fullWidth
+              value={updatedValidFrom}
+              onChange={(e) => setUpdatedValidFrom(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Valid Until"
+              type="datetime-local"
+              variant="outlined"
+              fullWidth
+              value={updatedValidUntil}
+              onChange={(e) => setUpdatedValidUntil(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Code"
+              variant="outlined"
+              fullWidth
+              value={updatedCode}
+              onChange={(e) => setUpdatedCode(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Discount Percentage"
+              type="number"
+              variant="outlined"
+              fullWidth
+              value={updatedDiscountPercentage}
+              onChange={(e) => setUpdatedDiscountPercentage(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleUpdateCancel} color="primary">Cancel</Button>
+            <Button onClick={handleUpdateConfirm} color="primary">Update</Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
+
+      {/* Delete Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleDeleteCancel}
+        PaperProps={{ sx: { borderRadius: 2 } }}
+      >
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this Event?
+            Are you sure you want to delete this event?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDeleteConfirm} color="primary" autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={openUpdateDialog} onClose={handleUpdateCancel}>
-        <DialogTitle>Update Event</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Name"
-            variant="outlined"
-            fullWidth
-            value={updatedName}
-            onChange={(e) => setUpdatedName(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Image URL"
-            variant="outlined"
-            fullWidth
-            value={updatedImage}
-            onChange={(e) => setUpdatedImage(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Valid From"
-            type="datetime-local"
-            variant="outlined"
-            fullWidth
-            value={updatedValidFrom}
-            onChange={(e) => setUpdatedValidFrom(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Valid Until"
-            type="datetime-local"
-            variant="outlined"
-            fullWidth
-            value={updatedValidUntil}
-            onChange={(e) => setUpdatedValidUntil(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Giftcode"
-            variant="outlined"
-            fullWidth
-            value={updatedCode}
-            onChange={(e) => setUpdatedCode(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            label="Discount Percentage"
-            type="number"
-            variant="outlined"
-            fullWidth
-            value={updatedDiscountPercentage}
-            onChange={(e) => setUpdatedDiscountPercentage(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdateCancel} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdateConfirm} color="primary" autoFocus>
-            Update
-          </Button>
+          <Button onClick={handleDeleteCancel} color="primary">Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="primary">Delete</Button>
         </DialogActions>
       </Dialog>
     </TableContainer>
