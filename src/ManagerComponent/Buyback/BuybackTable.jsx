@@ -25,7 +25,7 @@ import {
 import format from "date-fns/format";
 import SearchIcon from "@mui/icons-material/Search";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function BuyBackTable() {
   const { buyback } = useSelector((store) => store);
@@ -134,114 +134,130 @@ export default function BuyBackTable() {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
             padding: 2,
             gap: 1,
           }}
         >
-          <TextField
-            id="search-input"
-            label="Search by Name"
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
+          <Box
             sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "#0B4CBB",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#0B4CBB",
-              },
+              display: "flex",
+              gap: 1,
             }}
-          />
-          <TextField
-            id="start-date-input"
-            label="Start Date"
-            type="date"
-            variant="outlined"
-            size="small"
-            value={startDate}
-            onChange={handleStartDateChange}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "#0B4CBB",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#0B4CBB",
-              },
-            }}
-          />
-          <TextField
-            id="end-date-input"
-            label="End Date"
-            type="date"
-            variant="outlined"
-            size="small"
-            value={endDate}
-            onChange={handleEndDateChange}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "#0B4CBB",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#0B4CBB",
-              },
-            }}
-          />
-          <IconButton
-            aria-label="search"
-            onClick={handleSearch}
-            sx={{ color: "#0B4CBB" }}
           >
-            <SearchIcon />
-          </IconButton>
+            <TextField
+              id="start-date-input"
+              label="Start Date"
+              type="date"
+              variant="outlined"
+              size="small"
+              value={startDate}
+              onChange={handleStartDateChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#0B4CBB",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#0B4CBB",
+                },
+              }}
+            />
+            <TextField
+              id="end-date-input"
+              label="End Date"
+              type="date"
+              variant="outlined"
+              size="small"
+              value={endDate}
+              onChange={handleEndDateChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#0B4CBB",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#0B4CBB",
+                },
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <TextField
+              id="search-input"
+              label="Search by Name"
+              variant="outlined"
+              size="small"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#0B4CBB",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#0B4CBB",
+                },
+              }}
+            />
+            <IconButton
+              aria-label="search"
+              onClick={handleSearch}
+              sx={{ color: "#0B4CBB" }}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Box>
         </Box>
+
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -316,12 +332,17 @@ export default function BuyBackTable() {
         <DialogContent>
           {selectedBuyback ? (
             <Box>
-             
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      {["ID", "Name", "Gold Weight", "Diamond Weight","Price" ].map((header) => (
+                      {[
+                        "ID",
+                        "Name",
+                        "Gold Weight",
+                        "Diamond Weight",
+                        "Price",
+                      ].map((header) => (
                         <TableCell key={header} align="center">
                           <Typography
                             variant="subtitle1"
