@@ -24,17 +24,20 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Snackbar,  // Import Snackbar for error messages
 } from "@mui/material";
-import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { updateOrderStatus } from "../State/AreaOrder/Action";
 import { getUsersOrders } from "../State/Order/Action";
+import { Alert } from "@mui/material";  // Import Alert component
+import { toast } from 'react-toastify';
 
 export default function OrderCard() {
-  const { order } = useSelector((store) => store);
+  const { orders } = useSelector((store) => store.order);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
+
   const orderStatus = [
     { label: "PENDING", value: "PENDING" },
     { label: "COMPLETED", value: "COMPLETED" },
@@ -45,19 +48,21 @@ export default function OrderCard() {
   }, [dispatch, jwt]);
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', day: '2-digit',month: '2-digit', hour: '2-digit', minute: '2-digit' };
+    const options = { year: 'numeric', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
-  
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
+  const [error, setError] = useState("");  // State for error message
   const ordersPerPage = 10;
   const open = Boolean(anchorEl);
 
@@ -72,8 +77,8 @@ export default function OrderCard() {
     setSelectedOrderId(null);
   };
 
-  const handleUpdateOrder = (orderstatus) => {
-    dispatch(updateOrderStatus({ orderId: selectedOrderId, orderstatus, jwt }))
+  const handleUpdateOrder = (orderStatus) => {
+    dispatch(updateOrderStatus({ orderId: selectedOrderId, orderStatus, jwt }))
       .then(() => {
         dispatch(getUsersOrders(jwt));
       })
@@ -84,17 +89,30 @@ export default function OrderCard() {
   };
 
   useEffect(() => {
-    if (order.orders) {
+    if (orders) {
       handleSearch();
     }
-  }, [order.orders, filterStatus, searchTerm, currentPage]);
+  }, [orders, filterStatus, searchTerm, startDate, endDate, currentPage]);
 
   const handleSearch = () => {
-    const filtered = order.orders?.filter(
-      (order) =>
-        (filterStatus === "ALL" || order.orderStatus === filterStatus) &&
-        order.customer.fullname.toLowerCase().includes(searchTerm.toLowerCase())
-    ).reverse();
+    // Validate date range
+    if (new Date(startDate) > new Date(endDate)) {
+      toast.error("Start date cannot be later than end date.");
+      return;
+    } else {
+      setError("");
+    }
+    const filtered = orders?.filter((order) => {
+      const isStatusMatch = filterStatus === "ALL" || order.orderStatus === filterStatus;
+      const isNameMatch = order.customer.fullname.toLowerCase().includes(searchTerm.toLowerCase());
+      const orderDate = new Date(order.createdAt).toLocaleDateString();
+      const isDateInRange = (
+        (!startDate || new Date(order.createdAt) >= new Date(startDate)) &&
+        (!endDate || new Date(order.createdAt) <= new Date(endDate))
+      );
+
+      return isStatusMatch && isNameMatch && isDateInRange;
+    }).reverse();
     setFilteredOrders(filtered);
   };
 
@@ -149,110 +167,180 @@ export default function OrderCard() {
           </RadioGroup>
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 3, marginRight: 2 }}>
-          <TextField
-            id="search-input"
-            label="Search by Name"
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch();
-              }
-            }}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+            marginBottom: 3,
+            marginRight: 2,
+            gap: 2,
+          }}
+        >
+          <Box
             sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#0B4CBB",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: "#0B4CBB",
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#0B4CBB",
-              },
+              display: 'flex',
+              gap: 1,
+              alignItems: 'center',
             }}
-          />
-          <IconButton aria-label="search" onClick={handleSearch} sx={{ color: "#0B4CBB" }}>
-            <SearchIcon />
-          </IconButton>
+          >
+            <TextField
+              id="search-input"
+              label="Search by Name"
+              variant="outlined"
+              size="small"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#0B4CBB",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#0B4CBB",
+                },
+              }}
+            />
+            <IconButton aria-label="search" onClick={handleSearch} sx={{ color: "#0B4CBB" }}>
+              <SearchIcon />
+            </IconButton>
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            <TextField
+              id="start-date-input"
+              label="Start Date"
+              type="date"
+              variant="outlined"
+              size="small"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#0B4CBB",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#0B4CBB",
+                },
+              }}
+            />
+            <TextField
+              id="end-date-input"
+              label="End Date"
+              type="date"
+              variant="outlined"
+              size="small"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#0B4CBB",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#0B4CBB",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#0B4CBB",
+                },
+              }}
+            />
+          </Box>
         </Box>
+        
+        {/* Show error message if date range is invalid */}
+        {error && (
+          <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError("")}>
+            <Alert onClose={() => setError("")} severity="error">
+              {error}
+            </Alert>
+          </Snackbar>
+        )}
+
         <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow sx={{ backgroundColor: "#0B4CBB" }}>
                 <TableCell>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     ID
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Customer
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Price
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Stall
                   </Typography>
                 </TableCell>
-
                 <TableCell align="center">
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "bold", color: "white" }}
-                >
-                  Discount
-                </Typography>
-              </TableCell>
-
-              <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
-                  Creation Date
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
+                    Discount
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
+                    Creation Date
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Status
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Update
                   </Typography>
                 </TableCell>
@@ -308,41 +396,39 @@ export default function OrderCard() {
           </Table>
           {openDialog && selectedOrder && (
             <Dialog open={openDialog} onClose={closeDialog} fullWidth maxWidth="md">
-        <DialogTitle>Order Details</DialogTitle>
-        <DialogContent>
-          {selectedOrder && (
-            <>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Code</TableCell>
-                      <TableCell align="center">Name</TableCell>
-                      <TableCell align="center">Quantity</TableCell>
-                      <TableCell align="center">Total Price</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {selectedOrder.items.map((item) => (
-                      <TableRow key={item.id}>
-                     <TableCell>{item.jewelry.code}</TableCell>
-                        <TableCell align="center">{item.jewelry.name}</TableCell>
-                        <TableCell align="center">{item.quantity}</TableCell>
-                        <TableCell align="center">{item.totalPrice}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+              <DialogTitle>Order Details</DialogTitle>
+              <DialogContent>
+                {selectedOrder && (
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Code</TableCell>
+                          <TableCell align="center">Name</TableCell>
+                          <TableCell align="center">Quantity</TableCell>
+                          <TableCell align="center">Total Price</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {selectedOrder.items.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.jewelry.code}</TableCell>
+                            <TableCell align="center">{item.jewelry.name}</TableCell>
+                            <TableCell align="center">{item.quantity}</TableCell>
+                            <TableCell align="center">{item.totalPrice}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={closeDialog} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
           )}
         </TableContainer>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
@@ -356,7 +442,7 @@ export default function OrderCard() {
       </Card>
       <Menu
         anchorEl={anchorEl}
-        open={open}
+        open={Boolean(anchorEl)}
         onClose={handleClose}
         PaperProps={{
           style: {

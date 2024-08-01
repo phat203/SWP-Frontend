@@ -36,8 +36,10 @@ export default function OrdersTable({ filter }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const ordersPerPage = 12;
-  
+
   const [orderItems, setOrderItems] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [open, setOpen] = useState(false);
@@ -47,18 +49,26 @@ export default function OrdersTable({ filter }) {
   }, [dispatch, jwt]);
 
   useEffect(() => {
-    const filteredOrders = orders.filter(
-      (order) =>
+    const filteredOrders = orders.filter((order) => {
+      const orderDate = new Date(order.createdAt);
+      const isWithinDateRange =
+        (!startDate || orderDate >= new Date(startDate)) &&
+        (!endDate || orderDate <= new Date(endDate));
+
+      return (
         (filterStatus === "ALL" ||
           order.orderStatus.toUpperCase() === filterStatus) &&
         (order.customer.fullname
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-          order.id.toString().toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+          order.id.toString().toLowerCase().includes(searchTerm.toLowerCase())) &&
+        isWithinDateRange
+      );
+    });
+
     setSearchResults(filteredOrders);
     setCurrentPage(1);
-  }, [orders, filterStatus, searchTerm]);
+  }, [orders, filterStatus, searchTerm, startDate, endDate]);
 
   const handleFilterChange = (event) => {
     setFilterStatus(event.target.value);
@@ -85,7 +95,7 @@ export default function OrdersTable({ filter }) {
   };
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', day: '2-digit',month: '2-digit', hour: '2-digit', minute: '2-digit' };
+    const options = { year: 'numeric', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -127,16 +137,8 @@ export default function OrdersTable({ filter }) {
               sx={{ display: "flex", justifyContent: "center" }}
             >
               <FormControlLabel value="ALL" control={<Radio />} label="All" />
-              <FormControlLabel
-                value="PENDING"
-                control={<Radio />}
-                label="Pending"
-              />
-              <FormControlLabel
-                value="COMPLETED"
-                control={<Radio />}
-                label="Completed"
-              />
+              <FormControlLabel value="PENDING" control={<Radio />} label="Pending" />
+              <FormControlLabel value="COMPLETED" control={<Radio />} label="Completed" />
             </RadioGroup>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -167,12 +169,36 @@ export default function OrdersTable({ filter }) {
                 },
               }}
             />
-            <IconButton
-              aria-label="search"
-              onClick={() => console.log("Search clicked")}
-            >
+            <IconButton aria-label="search" onClick={() => console.log("Search clicked")}>
               <SearchIcon />
             </IconButton>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <TextField
+              id="start-date"
+              label="Start Date"
+              type="date"
+              variant="outlined"
+              size="small"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              sx={{ marginRight: 2 }}
+            />
+            <TextField
+              id="end-date"
+              label="End Date"
+              type="date"
+              variant="outlined"
+              size="small"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
           </Box>
         </Box>
         <TableContainer component={Paper}>
@@ -180,59 +206,37 @@ export default function OrdersTable({ filter }) {
             <TableHead>
               <TableRow sx={{ backgroundColor: "#0B4CBB" }}>
                 <TableCell>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     ID
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Customer
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Price
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Stall
                   </Typography>
                 </TableCell>
-
                 <TableCell align="center">
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: "bold", color: "white" }}
-                >
-                  Discount
-                </Typography>
-              </TableCell>
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
+                    Discount
+                  </Typography>
+                </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Creation Date
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ fontWeight: "bold", color: "white" }}
-                  >
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "white" }}>
                     Status
                   </Typography>
                 </TableCell>
@@ -258,16 +262,10 @@ export default function OrdersTable({ filter }) {
                     }}
                     onClick={() => handleRowClick(order)}
                   >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ fontWeight: "bold", fontSize: "1rem" }}
-                    >
+                    <TableCell component="th" scope="row" sx={{ fontWeight: "bold", fontSize: "1rem" }}>
                       {order.id}
                     </TableCell>
-                    <TableCell align="center">
-                      {order.customer.fullname}
-                    </TableCell>
+                    <TableCell align="center">{order.customer.fullname}</TableCell>
                     <TableCell align="center">{order.totalPrice}</TableCell>
                     <TableCell align="center">{order.areaName}</TableCell>
                     <TableCell align="center">{order.items[0].discountPercentage}%</TableCell>
@@ -277,8 +275,7 @@ export default function OrdersTable({ filter }) {
                         variant="body2"
                         sx={{
                           fontWeight: "bold",
-                          color:
-                            order.orderStatus === "COMPLETED" ? "green" : "red",
+                          color: order.orderStatus === "COMPLETED" ? "green" : "red",
                         }}
                       >
                         {order.orderStatus}
@@ -313,34 +310,22 @@ export default function OrdersTable({ filter }) {
                 <TableHead>
                   <TableRow>
                     <TableCell>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: "bold" }}
-                      >
+                      <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                         Item ID
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: "bold" }}
-                      >
+                      <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                         Jewelry
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: "bold" }}
-                      >
+                      <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                         Quantity
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ fontWeight: "bold" }}
-                      >
+                      <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                         Price
                       </Typography>
                     </TableCell>
@@ -358,9 +343,7 @@ export default function OrdersTable({ filter }) {
                       <TableCell component="th" scope="row">
                         {item.jewelry.code}
                       </TableCell>
-                      <TableCell align="center">
-                        {item.jewelry.name}
-                      </TableCell>
+                      <TableCell align="center">{item.jewelry.name}</TableCell>
                       <TableCell align="center">{item.quantity}</TableCell>
                       <TableCell align="center">{item.jewelry.price}</TableCell>
                     </TableRow>
