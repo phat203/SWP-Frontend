@@ -322,20 +322,20 @@ const MenuTable = () => {
       <Dialog open={detailsOpen} onClose={handleDetailsClose} sx={{ borderRadius: 2 }}>
         <DialogTitle>{"Item Details"}</DialogTitle>
         <DialogContent>
-          {selectedItem && (
-            <>
-              <DialogContentText>
-                <strong>Name:</strong> {selectedItem.name}
-              </DialogContentText>
-              <DialogContentText>
+        {selectedItem && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography variant="h6">{selectedItem.name}</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="subtitle1">
                 <strong>Gold Weight:</strong> {selectedItem.goldWeight} grams
-              </DialogContentText>
-              <DialogContentText>
+              </Typography>
+              <Typography variant="subtitle1">
                 <strong>Diamond Weight:</strong> {selectedItem.diamondWeight} carats
-              </DialogContentText>
-            </>
-          )}
-        </DialogContent>
+              </Typography>
+            </Box>
+          </Box>
+        )}
+      </DialogContent>
         <DialogActions>
           <Button onClick={handleDetailsClose} color="primary">
             Close

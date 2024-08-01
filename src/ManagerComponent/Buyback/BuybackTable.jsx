@@ -48,7 +48,7 @@ export default function BuyBackTable() {
 
   useEffect(() => {
     handleSearch();
-  }, [searchTerm, startDate, endDate, buyback]);
+  }, [searchTerm, buyback]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -75,6 +75,18 @@ export default function BuyBackTable() {
       const matchesName = buybackItem.customer.fullname
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
+      return matchesName;
+    });
+    setFilteredBuybacks(filtered);
+    if (searchTerm && filtered.length === 0) {
+      setShowNoResults(true);
+    } else {
+      setShowNoResults(false);
+    }
+  };
+
+  const handleDateSearch = () => {
+    const filtered = buyback?.buybacks.filter((buybackItem) => {
       const matchesStartDate = startDate
         ? new Date(buybackItem.transactionDate) >= new Date(startDate)
         : true;
@@ -82,18 +94,14 @@ export default function BuyBackTable() {
         ? new Date(buybackItem.transactionDate) <= new Date(endDate)
         : true;
 
-      return matchesName && matchesStartDate && matchesEndDate;
+      return matchesStartDate && matchesEndDate;
     });
     setFilteredBuybacks(filtered);
-    if ((searchTerm || startDate || endDate) && filtered.length === 0) {
+    if ((startDate || endDate) && filtered.length === 0) {
       setShowNoResults(true);
     } else {
       setShowNoResults(false);
     }
-  };
-
-  const handleSearchClick = () => {
-    handleSearch();
   };
 
   const handlePageChange = (event, value) => {
@@ -208,6 +216,24 @@ export default function BuyBackTable() {
                 },
               }}
             />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDateSearch}
+              sx={{
+                backgroundColor: "#007bff",
+                color: "#fff",
+                fontWeight: "bold",
+                "&:hover": {
+                  backgroundColor: "#0056b3",
+                },
+                borderRadius: 2,
+                boxShadow: "none",
+                textTransform: "none",
+              }}
+            >
+              Search
+            </Button>
           </Box>
           <Box
             sx={{

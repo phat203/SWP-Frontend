@@ -82,7 +82,28 @@ export default function OrderCard() {
     setAnchorEl(null);
     setSelectedOrderId(null);
   };
-
+  const handleSearchByDate = () => {
+    // Validate date range
+    if (new Date(startDate) > new Date(endDate)) {
+      toast.error("Start date cannot be later than end date.");
+      return;
+    } else {
+      setError("");
+    }
+    // Filter orders based on date range
+    const filtered = orders
+      ?.filter((order) => {
+        const orderDate = new Date(order.createdAt).toLocaleDateString();
+        return (
+          (!startDate || new Date(order.createdAt) >= new Date(startDate)) &&
+          (!endDate || new Date(order.createdAt) <= new Date(endDate))
+        );
+      })
+      .reverse();
+    setFilteredOrders(filtered);
+    setCurrentPage(1); // Reset to first page
+  };
+  
   const handleUpdateOrder = (orderStatus) => {
     if (selectedOrderId && orderStatus) {
       dispatch(
@@ -208,10 +229,10 @@ export default function OrderCard() {
           }}
         >
           <Box
-               sx={{
-                display: "flex",
-                gap: 1,
-              }}
+            sx={{
+              display: "flex",
+              gap: 1,
+            }}
           >
             <TextField
               id="start-date-input"
@@ -270,9 +291,18 @@ export default function OrderCard() {
                   color: "#0B4CBB",
                 },
               }}
-            />
-            </Box>
-            <Box  sx={{
+            /> 
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSearchByDate}
+              sx={{ height: "100%" }}
+            >
+              Search
+            </Button>
+          </Box>
+          <Box
+            sx={{
               display: "flex",
               alignItems: "center",
               gap: 1,
