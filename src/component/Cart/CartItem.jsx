@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography, IconButton } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { findCart, removeCartItem, updateCartItem } from "../State/Cart/Action";
 
@@ -13,7 +13,9 @@ const CartItem = ({ item }) => {
 
   const handleRemoveCartItem = async () => {
     try {
-      await dispatch(removeCartItem({ cartItemId: item.id, jwt: auth.jwt || jwt }));
+      await dispatch(
+        removeCartItem({ cartItemId: item.id, jwt: auth.jwt || jwt })
+      );
       await dispatch(findCart(jwt));
     } catch (error) {
       console.error("Lỗi khi xóa item trong giỏ hàng:", error);
@@ -38,10 +40,10 @@ const CartItem = ({ item }) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         padding: 2,
-        borderBottom: '1px solid #e0e0e0',
+        borderBottom: "1px solid #e0e0e0",
       }}
     >
       <Box
@@ -51,7 +53,7 @@ const CartItem = ({ item }) => {
         sx={{
           width: 64,
           height: 64,
-          objectFit: 'cover',
+          objectFit: "cover",
           borderRadius: 1,
           marginRight: 2,
         }}
@@ -60,7 +62,7 @@ const CartItem = ({ item }) => {
         <Typography variant="body1" gutterBottom>
           {item.jewelry.name}
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
             size="small"
             onClick={() => handleUpdateCartItem(-1)}
@@ -72,7 +74,7 @@ const CartItem = ({ item }) => {
             variant="body2"
             sx={{
               width: 32,
-              textAlign: 'center',
+              textAlign: "center",
             }}
           >
             {item.quantity}

@@ -1,9 +1,9 @@
 import { Button, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Field, Form, Formik } from "formik";
-import React from 'react';
+import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from '../State/Authentication/Action';
+import { registerUser } from "../State/Authentication/Action";
 
 const initialValues = {
   fullname: "",
@@ -60,23 +60,45 @@ export default function RegisterForm() {
   return (
     <div
       style={{
-        backgroundImage: 'url("https://images.pexels.com/photos/5442446/pexels-photo-5442446.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
+        backgroundImage:
+          'url("https://images.pexels.com/photos/5442446/pexels-photo-5442446.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', maxWidth: '400px', width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          <img src="https://cdn.pnj.io/images/logo/pnj.com.vn.png" alt="Logo" style={{ width: '100px' }} />
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "2rem",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+          <img
+            src="https://cdn.pnj.io/images/logo/pnj.com.vn.png"
+            alt="Logo"
+            style={{ width: "100px" }}
+          />
         </div>
-        <Typography variant="h5" className="text-center" style={{ color: 'black' }}>
+        <Typography
+          variant="h5"
+          className="text-center"
+          style={{ color: "black" }}
+        >
           Register
         </Typography>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validate={validate}
+        >
           {({ isSubmitting, errors, touched, handleBlur }) => (
             <Form>
               <Field
@@ -87,7 +109,9 @@ export default function RegisterForm() {
                 variant="outlined"
                 margin="normal"
                 onBlur={handleBlur}
-                helperText={touched.fullname && errors.fullname ? errors.fullname : ""}
+                helperText={
+                  touched.fullname && errors.fullname ? errors.fullname : ""
+                }
                 error={touched.fullname && Boolean(errors.fullname)}
                 sx={{
                   "& .MuiOutlinedInput-root": {
@@ -117,7 +141,9 @@ export default function RegisterForm() {
                 variant="outlined"
                 margin="normal"
                 onBlur={handleBlur}
-                helperText={touched.username && errors.username ? errors.username : ""}
+                helperText={
+                  touched.username && errors.username ? errors.username : ""
+                }
                 error={touched.username && Boolean(errors.username)}
                 sx={{
                   "& .MuiOutlinedInput-root": {
@@ -148,7 +174,9 @@ export default function RegisterForm() {
                 margin="normal"
                 type="password"
                 onBlur={handleBlur}
-                helperText={touched.password && errors.password ? errors.password : ""}
+                helperText={
+                  touched.password && errors.password ? errors.password : ""
+                }
                 error={touched.password && Boolean(errors.password)}
                 sx={{
                   "& .MuiOutlinedInput-root": {
@@ -274,9 +302,17 @@ export default function RegisterForm() {
             </Form>
           )}
         </Formik>
-        <Typography variant="body2" align="center" sx={{ mt: 3, color: 'black' }}>
+        <Typography
+          variant="body2"
+          align="center"
+          sx={{ mt: 3, color: "black" }}
+        >
           If you already have an account,
-          <Button size="small" onClick={() => navigate("/account/login")} sx={{ color: 'blue' }}>
+          <Button
+            size="small"
+            onClick={() => navigate("/account/login")}
+            sx={{ color: "blue" }}
+          >
             Login
           </Button>
         </Typography>

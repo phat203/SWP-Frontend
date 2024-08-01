@@ -1,16 +1,19 @@
 import React from "react";
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
 
 const JewelryCard = ({ item }) => {
   const navigate = useNavigate();
 
-
   const handleNavigate = () => {
     navigate(`/item/${item.id}`);
   };
-
 
   return (
     <Card sx={{ maxWidth: 345, m: 2, borderRadius: 2, boxShadow: 3 }}>
@@ -23,7 +26,12 @@ const JewelryCard = ({ item }) => {
           sx={{ borderRadius: "8px 8px 0 0" }}
         />
         <CardContent>
-          <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            sx={{ fontWeight: "bold" }}
+          >
             {item.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">

@@ -1,15 +1,41 @@
 import { Delete, Edit } from "@mui/icons-material";
-import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, CardHeader, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography, TextField, InputAdornment, Box, Alert, Pagination } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCoupons, deleteCoupon, updateCoupon } from '../../component/State/Event/Action';
-import format from 'date-fns/format';
-import SearchIcon from '@mui/icons-material/Search';
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  CardHeader,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  Typography,
+  TextField,
+  InputAdornment,
+  Box,
+  Alert,
+  Pagination,
+} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getCoupons,
+  deleteCoupon,
+  updateCoupon,
+} from "../../component/State/Event/Action";
+import format from "date-fns/format";
+import SearchIcon from "@mui/icons-material/Search";
 import { toast } from "react-toastify";
 
 const EventTable = () => {
   const dispatch = useDispatch();
-  const coupon = useSelector(state => state.coupon);
+  const coupon = useSelector((state) => state.coupon);
   const jwt = localStorage.getItem("jwt");
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -25,7 +51,8 @@ const EventTable = () => {
   const [updatedValidFrom, setUpdatedValidFrom] = useState("");
   const [updatedValidUntil, setUpdatedValidUntil] = useState("");
   const [updatedCode, setUpdatedCode] = useState("");
-  const [updatedDiscountPercentage, setUpdatedDiscountPercentage] = useState("");
+  const [updatedDiscountPercentage, setUpdatedDiscountPercentage] =
+    useState("");
 
   useEffect(() => {
     dispatch(getCoupons(jwt));
@@ -50,8 +77,10 @@ const EventTable = () => {
     setCouponToUpdate(coupon);
     setUpdatedName(coupon.name);
     setUpdatedImage(coupon.images);
-    setUpdatedValidFrom(format(new Date(coupon.validFrom), 'yyyy-MM-ddTHH:mm'));
-    setUpdatedValidUntil(format(new Date(coupon.validUntil), 'yyyy-MM-ddTHH:mm'));
+    setUpdatedValidFrom(format(new Date(coupon.validFrom), "yyyy-MM-ddTHH:mm"));
+    setUpdatedValidUntil(
+      format(new Date(coupon.validUntil), "yyyy-MM-ddTHH:mm")
+    );
     setUpdatedCode(coupon.code);
     setUpdatedDiscountPercentage(coupon.discountPercentage);
     setOpenUpdateDialog(true);
@@ -64,13 +93,12 @@ const EventTable = () => {
       validFrom: new Date(updatedValidFrom).toISOString(),
       validUntil: new Date(updatedValidUntil).toISOString(),
       code: updatedCode,
-      discountPercentage: updatedDiscountPercentage
-    }
-    dispatch(updateCoupon(couponToUpdate.id,
-      couponData, jwt));
-      toast.success("Update Event Success",{
-        autoClose: 500,
-      }); 
+      discountPercentage: updatedDiscountPercentage,
+    };
+    dispatch(updateCoupon(couponToUpdate.id, couponData, jwt));
+    toast.success("Update Event Success", {
+      autoClose: 500,
+    });
     setOpenUpdateDialog(false);
   };
 
@@ -79,7 +107,7 @@ const EventTable = () => {
     setCouponToUpdate(null);
   };
 
-  const filteredEvents = coupon.coupons.filter(event => 
+  const filteredEvents = coupon.coupons.filter((event) =>
     event.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -106,7 +134,7 @@ const EventTable = () => {
           color: "#fff",
         }}
       />
-      <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
         <TextField
           label="Search by Event Name"
           variant="outlined"
@@ -125,7 +153,7 @@ const EventTable = () => {
           sx={{
             mb: 2,
             mx: 5,
-            width: '100%',
+            width: "100%",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
                 borderColor: "gray",
@@ -149,39 +177,60 @@ const EventTable = () => {
 
       <Table>
         <TableHead>
-          <TableRow sx={{ backgroundColor: '#0B4CBB' }}>
+          <TableRow sx={{ backgroundColor: "#0B4CBB" }}>
             <TableCell>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
                 Name
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
                 Image
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
                 Time Start
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
                 Time End
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
                 Giftcode
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
                 Discount
               </Typography>
             </TableCell>
             <TableCell align="center">
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: "bold", color: "white" }}
+              >
                 Actions
               </Typography>
             </TableCell>
@@ -190,20 +239,35 @@ const EventTable = () => {
         <TableBody>
           {paginatedEvents.length > 0 ? (
             paginatedEvents.map((event, index) => (
-              <TableRow key={index} sx={{
-                "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
-                "&:hover": { backgroundColor: "#e0e0e0" },
-              }}>
+              <TableRow
+                key={index}
+                sx={{
+                  "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
+                  "&:hover": { backgroundColor: "#e0e0e0" },
+                }}
+              >
                 <TableCell>{event.name}</TableCell>
                 <TableCell>
                   {event.images && (
-                    <img src={event.images} alt="Event" style={{ width: '100px', height: 'auto', borderRadius: '8px' }} />
+                    <img
+                      src={event.images}
+                      alt="Event"
+                      style={{
+                        width: "100px",
+                        height: "auto",
+                        borderRadius: "8px",
+                      }}
+                    />
                   )}
                 </TableCell>
                 <TableCell>{event.code}</TableCell>
                 <TableCell>{event.discountPercentage}%</TableCell>
-                <TableCell>{format(new Date(event.validFrom), 'dd/MM/yyyy HH:mm')}</TableCell>
-                <TableCell>{format(new Date(event.validUntil), 'dd/MM/yyyy HH:mm')}</TableCell>
+                <TableCell>
+                  {format(new Date(event.validFrom), "dd/MM/yyyy HH:mm")}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(event.validUntil), "dd/MM/yyyy HH:mm")}
+                </TableCell>
                 <TableCell align="center">
                   <IconButton onClick={() => handleUpdateClick(event)}>
                     <Edit />
@@ -234,7 +298,11 @@ const EventTable = () => {
       </Box>
 
       {/* Update Dialog with Box */}
-      <Dialog open={openUpdateDialog} onClose={handleUpdateCancel} PaperProps={{ sx: { borderRadius: 2 } }}>
+      <Dialog
+        open={openUpdateDialog}
+        onClose={handleUpdateCancel}
+        PaperProps={{ sx: { borderRadius: 2 } }}
+      >
         <Box
           sx={{
             position: "relative",
@@ -300,8 +368,12 @@ const EventTable = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleUpdateCancel} color="primary">Cancel</Button>
-            <Button onClick={handleUpdateConfirm} color="primary">Update</Button>
+            <Button onClick={handleUpdateCancel} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateConfirm} color="primary">
+              Update
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>
@@ -319,8 +391,12 @@ const EventTable = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel} color="primary">Cancel</Button>
-          <Button onClick={handleDeleteConfirm} color="primary">Delete</Button>
+          <Button onClick={handleDeleteCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="primary">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </TableContainer>

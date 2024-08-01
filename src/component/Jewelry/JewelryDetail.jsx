@@ -21,7 +21,7 @@ import { Navbar } from "../Navbar/Navbar";
 import { getAreaById } from "../State/Area/Action";
 import { getAllCategory } from "../State/Categories/Action";
 import { getMenuItemsByJewelryId } from "../State/Menu/Action";
-import MenuCard from './MenuCard';
+import MenuCard from "./MenuCard";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
@@ -104,8 +104,11 @@ const JewelryDetails = () => {
           return true;
       }
     })
-    .filter((item) =>
-      !actualSearchQuery ? true : item.name.toLowerCase().includes(actualSearchQuery.toLowerCase()) // Check if actualSearchQuery is empty
+    .filter(
+      (item) =>
+        !actualSearchQuery
+          ? true
+          : item.name.toLowerCase().includes(actualSearchQuery.toLowerCase()) // Check if actualSearchQuery is empty
     )
     .sort((a, b) => {
       switch (sortBy) {

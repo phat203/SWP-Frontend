@@ -1,26 +1,24 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { calculateBuybackPrice} from '../State/Valuation/Action'; // Adjust the import path accordingly
-import { getMenuItemByCode } from '../State/Menu/Action';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { calculateBuybackPrice } from "../State/Valuation/Action"; // Adjust the import path accordingly
+import { getMenuItemByCode } from "../State/Menu/Action";
 
 const ValuationA = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("jwt");
 
-  const [productCode, setProductCode] = useState('');
+  const [productCode, setProductCode] = useState("");
 
   const handleCalculatePrice = async () => {
     // Fetch the jewelry item
-    const response = await dispatch(getMenuItemByCode({ code: productCode, jwt: token }));
-    console.log("respone",response)
+    const response = await dispatch(
+      getMenuItemByCode({ code: productCode, jwt: token })
+    );
+    console.log("respone", response);
     // Check if the fetch was successful
     const jewelryData = response.payload;
 
-    
-      dispatch(calculateBuybackPrice(jewelryData, token));
-  
-    
-     
+    dispatch(calculateBuybackPrice(jewelryData, token));
   };
 
   return (

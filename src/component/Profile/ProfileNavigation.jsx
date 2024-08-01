@@ -18,6 +18,7 @@ import {
   ListItemText,
   useMediaQuery,
   Box,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -25,20 +26,25 @@ import { useDispatch } from "react-redux";
 import { logout } from "../State/Authentication/Action";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import logo from "../../assets/logo.png";
-export const menu = [
+
+const menu = [
   { title: "Dashboard", icon: <Dashboard />, path: "/staff/jewelry/dashboard" },
   { title: "Orders", icon: <ShoppingBagIcon /> },
-  {title: "Buyback",icon: <ShoppingCartCheckoutIcon />,path: "/staff/jewelry/buyback"},
+  {
+    title: "Buyback",
+    icon: <ShoppingCartCheckoutIcon />,
+    path: "/staff/jewelry/buyback",
+  },
   { title: "Event", icon: <EventIcon /> },
   { title: "Logout", icon: <LogoutIcon sx={{ color: "red" }} /> },
 ];
 
 const Logo = styled("img")({
-  height: 300, // Tăng giá trị height để phóng to ảnh
-  width: 300, // Thêm width để giữ tỷ lệ
+  height: 150,
+  width: 150,
   backgroundColor: "#003366",
-  borderRadius: "100%",
-  border: "5px solid #EEBF0D", 
+  borderRadius: "50%",
+  border: "5px solid #EEBF0D",
 });
 
 const ProfileNavigation = ({ open, handleClose }) => {
@@ -67,9 +73,9 @@ const ProfileNavigation = ({ open, handleClose }) => {
       anchor="left"
       sx={{
         "& .MuiDrawer-paper": {
-          width: isSmallScreen ? "50vw" : "20vw",
+          width: isSmallScreen ? "75vw" : "20vw",
           boxSizing: "border-box",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "#f5f5f5",
         },
       }}
     >
@@ -98,10 +104,19 @@ const ProfileNavigation = ({ open, handleClose }) => {
                 },
               }}
             >
-              <ListItemIcon sx={{ color: "#003366", fontSize: "3rem" }}>
-                {React.cloneElement(item.icon, { fontSize: "inherit" })}
+              <ListItemIcon sx={{ color: "#003366" }}>
+                {React.cloneElement(item.icon, { fontSize: "large" })}
               </ListItemIcon>
-              <ListItemText primary={item.title} />
+              <ListItemText
+                primary={
+                  <Typography
+                    variant="body1"
+                    sx={{ fontWeight: "bold", color: "#003366" }}
+                  >
+                    {item.title}
+                  </Typography>
+                }
+              />
             </ListItem>
             {i !== menu.length - 1 && <Divider sx={{ my: 0.5 }} />}
           </React.Fragment>

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCoupons } from '../State/Event/Action';
-import EventCard from './EventCard';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCoupons } from "../State/Event/Action";
+import EventCard from "./EventCard";
 
 export const EventShow = () => {
   const dispatch = useDispatch();
-  const coupon = useSelector(state => state.coupon);
+  const coupon = useSelector((state) => state.coupon);
   const jwt = localStorage.getItem("jwt");
 
   const [fadeIn, setFadeIn] = useState(false);
@@ -33,8 +33,8 @@ export const EventShow = () => {
 
   const fadeInStyle = {
     opacity: fadeIn ? 1 : 0,
-    transform: fadeIn ? 'translateY(0)' : 'translateY(20px)',
-    transition: 'opacity 500ms, transform 500ms'
+    transform: fadeIn ? "translateY(0)" : "translateY(20px)",
+    transition: "opacity 500ms, transform 500ms",
   };
 
   const handleCouponClick = (id) => {
@@ -43,9 +43,13 @@ export const EventShow = () => {
   };
 
   return (
-    <div className='mt-5 flex flex-wrap gap-5'>
-      {recentCoupons.map(coupon => (
-        <div key={coupon.id} style={fadeInStyle} onClick={() => handleCouponClick(coupon.id)}>
+    <div className="mt-5 flex flex-wrap gap-5">
+      {recentCoupons.map((coupon) => (
+        <div
+          key={coupon.id}
+          style={fadeInStyle}
+          onClick={() => handleCouponClick(coupon.id)}
+        >
           <EventCard coupon={coupon} />
         </div>
       ))}

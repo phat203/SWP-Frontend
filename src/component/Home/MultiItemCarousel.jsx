@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Slider from 'react-slick';
-import { topMeels } from './topMeel';
-import CarouselItem from './CarouselItem';
+import Slider from "react-slick";
+import { topMeels } from "./topMeel";
+import CarouselItem from "./CarouselItem";
 
 const MultiItemCarousel = () => {
   const settings = {
@@ -22,23 +22,23 @@ const MultiItemCarousel = () => {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 
   return (

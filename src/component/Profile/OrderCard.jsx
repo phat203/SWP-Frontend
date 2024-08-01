@@ -103,7 +103,7 @@ export default function OrderCard() {
     setFilteredOrders(filtered);
     setCurrentPage(1); // Reset to first page
   };
-  
+
   const handleUpdateOrder = (orderStatus) => {
     if (selectedOrderId && orderStatus) {
       dispatch(
@@ -291,12 +291,22 @@ export default function OrderCard() {
                   color: "#0B4CBB",
                 },
               }}
-            /> 
-          <Button
+            />
+            <Button
               variant="contained"
               color="primary"
               onClick={handleSearchByDate}
-              sx={{ height: "100%" }}
+              sx={{
+                backgroundColor: "#007bff",
+                color: "#fff",
+                fontWeight: "bold",
+                "&:hover": {
+                  backgroundColor: "#0056b3",
+                },
+                borderRadius: 2,
+                boxShadow: "none",
+                textTransform: "none",
+              }}
             >
               Search
             </Button>
