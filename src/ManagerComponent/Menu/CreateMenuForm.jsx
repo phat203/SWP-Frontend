@@ -104,7 +104,7 @@ const CreateMenuForm = () => {
     
                 toast.success("Category created successfully!");
 
-                navigate('/manager/jewelry/menu');
+                navigate('/manager/jewelry/instock');
                 
                 } catch (error) {
                     if (error.response && error.response.data && error.response.data.message) {
