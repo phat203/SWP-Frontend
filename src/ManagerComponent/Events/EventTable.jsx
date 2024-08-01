@@ -1,8 +1,8 @@
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, CardHeader, TableHead, TableRow, Paper, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Typography, TextField, InputAdornment, Box, Alert, Pagination } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCoupons, deleteCoupon } from '../../component/State/Event/Action';
+import { getCoupons, deleteCoupon, updateCoupon } from '../../component/State/Event/Action';
 import format from 'date-fns/format';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -12,10 +12,19 @@ const EventTable = () => {
   const jwt = localStorage.getItem("jwt");
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [couponToDelete, setCouponToDelete] = useState(null);
+  const [couponToUpdate, setCouponToUpdate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const [updatedName, setUpdatedName] = useState("");
+  const [updatedImage, setUpdatedImage] = useState("");
+  const [updatedValidFrom, setUpdatedValidFrom] = useState("");
+  const [updatedValidUntil, setUpdatedValidUntil] = useState("");
+  const [updatedCode, setUpdatedCode] = useState("");
+  const [updatedDiscountPercentage, setUpdatedDiscountPercentage] = useState("");
 
   useEffect(() => {
     dispatch(getCoupons(jwt));
@@ -34,6 +43,35 @@ const EventTable = () => {
   const handleDeleteCancel = () => {
     setOpenDeleteDialog(false);
     setCouponToDelete(null);
+  };
+
+  const handleUpdateClick = (coupon) => {
+    setCouponToUpdate(coupon);
+    setUpdatedName(coupon.name);
+    setUpdatedImage(coupon.images);
+    setUpdatedValidFrom(format(new Date(coupon.validFrom), 'yyyy-MM-ddTHH:mm'));
+    setUpdatedValidUntil(format(new Date(coupon.validUntil), 'yyyy-MM-ddTHH:mm'));
+    setUpdatedCode(coupon.code);
+    setUpdatedDiscountPercentage(coupon.discountPercentage);
+    setOpenUpdateDialog(true);
+  };
+
+  const handleUpdateConfirm = () => {
+    dispatch(updateCoupon({
+      id: couponToUpdate.id,
+      name: updatedName,
+      images: updatedImage,
+      validFrom: new Date(updatedValidFrom).toISOString(),
+      validUntil: new Date(updatedValidUntil).toISOString(),
+      code: updatedCode,
+      discountPercentage: updatedDiscountPercentage
+    }, jwt));
+    setOpenUpdateDialog(false);
+  };
+
+  const handleUpdateCancel = () => {
+    setOpenUpdateDialog(false);
+    setCouponToUpdate(null);
   };
 
   const filteredEvents = coupon.coupons.filter(event => 
@@ -139,7 +177,7 @@ const EventTable = () => {
             </TableCell>
             <TableCell align="center">
               <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'white' }}>
-                Delete
+                Actions
               </Typography>
             </TableCell>
           </TableRow>
@@ -162,6 +200,9 @@ const EventTable = () => {
                 <TableCell>{event.code}</TableCell>
                 <TableCell>{event.discountPercentage}%</TableCell>
                 <TableCell align="center">
+                  <IconButton onClick={() => handleUpdateClick(event)}>
+                    <Edit />
+                  </IconButton>
                   <IconButton onClick={() => handleDeleteClick(event.id)}>
                     <Delete />
                   </IconButton>
@@ -200,6 +241,71 @@ const EventTable = () => {
           </Button>
           <Button onClick={handleDeleteConfirm} color="primary" autoFocus>
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openUpdateDialog} onClose={handleUpdateCancel}>
+        <DialogTitle>Update Event</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Name"
+            variant="outlined"
+            fullWidth
+            value={updatedName}
+            onChange={(e) => setUpdatedName(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Image URL"
+            variant="outlined"
+            fullWidth
+            value={updatedImage}
+            onChange={(e) => setUpdatedImage(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Valid From"
+            type="datetime-local"
+            variant="outlined"
+            fullWidth
+            value={updatedValidFrom}
+            onChange={(e) => setUpdatedValidFrom(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Valid Until"
+            type="datetime-local"
+            variant="outlined"
+            fullWidth
+            value={updatedValidUntil}
+            onChange={(e) => setUpdatedValidUntil(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Giftcode"
+            variant="outlined"
+            fullWidth
+            value={updatedCode}
+            onChange={(e) => setUpdatedCode(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Discount Percentage"
+            type="number"
+            variant="outlined"
+            fullWidth
+            value={updatedDiscountPercentage}
+            onChange={(e) => setUpdatedDiscountPercentage(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdateCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateConfirm} color="primary" autoFocus>
+            Update
           </Button>
         </DialogActions>
       </Dialog>
