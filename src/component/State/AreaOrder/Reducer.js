@@ -1,11 +1,12 @@
 // reducers.js
 
-import { GET_AREA_ORDER_FAILURE, GET_AREA_ORDER_REQUEST, GET_AREA_ORDER_SUCCESS, UPDATE_ORDER_STATUS_FAILURE, UPDATE_ORDER_STATUS_REQUEST, UPDATE_ORDER_STATUS_SUCCESS } from "./ActionType";
+import { CALCULATE_ORDER_PRICE_FAILURE, CALCULATE_ORDER_PRICE_REQUEST, CALCULATE_ORDER_PRICE_SUCCESS, GET_AREA_ORDER_FAILURE, GET_AREA_ORDER_REQUEST, GET_AREA_ORDER_SUCCESS, UPDATE_ORDER_STATUS_FAILURE, UPDATE_ORDER_STATUS_REQUEST, UPDATE_ORDER_STATUS_SUCCESS } from "./ActionType";
 
 const initialState = {
     loading: false,
     error: null,
-    orders:[]
+    orders:[],
+    orderPriceDetails: {}
 };
 
 const areaOrderReducer = (state = initialState, action) => {
@@ -31,5 +32,22 @@ const areaOrderReducer = (state = initialState, action) => {
             return state;
     }
 };
+
+const orderPriceReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case CALCULATE_ORDER_PRICE_REQUEST:
+            return { ...state, loading: true, error: null };
+
+        case CALCULATE_ORDER_PRICE_SUCCESS:
+            return { ...state, loading: false, orderPriceDetails: action.payload };
+
+        case CALCULATE_ORDER_PRICE_FAILURE:
+            return { ...state, loading: false, error: action.error };
+
+        default:
+            return state;
+    }
+};
+
 
 export default areaOrderReducer;
