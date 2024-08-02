@@ -174,7 +174,7 @@ const LoginForm = () => {
           align="center"
           sx={{ mt: 3, color: "black" }}
         >
-          Don't have an account?
+          
           {/* <Button size="big" onClick={() => navigate("/register")} sx={{ color: '' }}>
                         Register
                     </Button> */}

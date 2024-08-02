@@ -16,6 +16,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import PaymentsIcon from "@mui/icons-material/Payments";
 import React, { useState } from "react";
 import CartItem from "./CartItem";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +24,8 @@ import { Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import * as Yup from "yup";
+import { Navbar } from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 import {
   addItemToCartByCode,
   applyCoupon,
@@ -199,9 +202,69 @@ const Cart = () => {
 
   return (
     <>
-      <div>
+      <Navbar />
+      <div className="mt-24">
         <main className="lg:flex justify-between  bg-[#fbfbfb]">
           <section className="lg:w-[40%] space-y-6 lg:min-h-screen pt-10">
+            {/* Product Code Input */}
+            <Card
+              className="w-80 p-2 mt-2"
+              sx={{
+                margin: "auto", // Center horizontally
+                textAlign: "center", // Center content inside the card
+                display: "flex", // Use flexbox layout
+                flexDirection: "column", // Stack items vertically
+                gap: 2, // Add space between items
+                alignItems: "center", // Center items horizontally
+              }}
+            >
+              <TextField
+                label="Product Code"
+                variant="outlined"
+                fullWidth
+                value={productCode}
+                onChange={(e) => setProductCode(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "gray",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "gray",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "gray",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "gray",
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "gray",
+                  },
+                }}
+              />
+              <Button
+                variant="outlined"
+                onClick={handleAddToCart}
+                sx={{
+                  color: "green",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  width: "200px",
+                  "&:hover": {
+                    backgroundColor: "#0056b3",
+                  },
+                  borderRadius: 2,
+                  boxShadow: "none",
+                  textTransform: "none",
+                  // Add margin to top for spacing from TextField
+                }}
+              >
+                Add
+              </Button>
+            </Card>
             {cart.cartItems.length > 0 ? (
               <TableContainer
                 component={Paper}
@@ -233,29 +296,51 @@ const Cart = () => {
                 </Table>
               </TableContainer>
             ) : (
-              <Typography
-                variant="h6"
-                className="p-1"
-                sx={{
-                  textAlign: "center",
-                  backgroundColor: "#F22B2B", // Thêm màu nền
-                  color: "white", // Thay đổi màu chữ nếu cần để dễ đọc
-                  padding: "2px", // Điều chỉnh padding để đảm bảo văn bản không dính sát vào cạnh
-                  borderRadius: "1px", // Thêm viền bo tròn nếu muốn
-                  fontWeight: "bold", // Làm cho văn bản đậm
-                  //display: "inline-block", // Làm cho chiều rộng phù hợp với nội dung
-                }}
+              <TableContainer
+                component={Paper}
+                className="mt-5 mx-auto"
+                sx={{ maxWidth: "500px" }}
               >
-                No Product In Cart
-              </Typography>
+                <Typography variant="h6" className="p-3">
+                  Cart Items
+                </Typography>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">Product</TableCell>
+                      <TableCell align="center">Price</TableCell>
+                      <TableCell align="center">Quantity</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell
+                        align="center"
+                        colSpan={6} // Adjust the colspan according to the number of columns in your table
+                        sx={{
+                          color: "red", // Set the text color to red
+                          textAlign: "center", // Center the text
+                          fontWeight: "bold", // Optional: make the text bold
+                        }}
+                      >
+                        No Product in Cart
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
             )}
             <Divider />
             {/* Product Code Input */}
-            <Card
-              className="flex gap-90 w-80 p-2 mt-2"
+            {/* <Card
+              className="w-80 p-2 mt-2"
               sx={{
                 margin: "auto", // Center horizontally
                 textAlign: "center", // Center content inside the card
+                display: "flex", // Use flexbox layout
+                flexDirection: "column", // Stack items vertically
+                gap: 2, // Add space between items
+                alignItems: "center", // Center items horizontally
               }}
             >
               <TextField
@@ -286,28 +371,35 @@ const Cart = () => {
               />
               <Button
                 variant="outlined"
-                fullWidth
                 onClick={handleAddToCart}
                 sx={{
                   color: "green",
-                  borderColor: "green",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
                   fontWeight: "bold",
-                  width: "120px",
+                  width: "200px",
                   "&:hover": {
-                    borderColor: "darkyellow",
-                    backgroundColor: "lightyellow",
+                    backgroundColor: "#0056b3",
                   },
+                  borderRadius: 2,
+                  boxShadow: "none",
+                  textTransform: "none",
+                  // Add margin to top for spacing from TextField
                 }}
               >
                 Add
               </Button>
-            </Card>
+            </Card> */}
             {/* Coupon Code Input */}
             <Card
-              className="flex gap-90 w-80 p-2 mt-2"
+              className="w-80 p-1 mt-2"
               sx={{
                 margin: "auto", // Center horizontally
                 textAlign: "center", // Center content inside the card
+                display: "flex", // Use flexbox layout
+                flexDirection: "column", // Stack items vertically
+                gap: 2, // Add space between items
+                alignItems: "center", // Center items horizontally
               }}
             >
               <TextField
@@ -338,24 +430,27 @@ const Cart = () => {
               />
               <Button
                 variant="outlined"
-                fullWidth
                 onClick={handleApplyCoupon}
                 sx={{
                   color: "green",
-                  borderColor: "green",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
                   fontWeight: "bold",
-                  width: "120px",
+                  width: "200px",
                   "&:hover": {
-                    borderColor: "darkyellow",
-                    backgroundColor: "lightyellow",
+                    backgroundColor: "#0056b3",
                   },
+                  borderRadius: 2,
+                  boxShadow: "none",
+                  textTransform: "none",
+                  // Add margin to top for spacing from TextField
                 }}
               >
                 Coupon
               </Button>
             </Card>
             {/* Clear Cart Button */}
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-1">
               <Button
                 variant="outlined"
                 onClick={handleClearCart}
@@ -374,7 +469,9 @@ const Cart = () => {
                 Clear Cart
               </Button>
             </div>
-
+          </section>
+          <Divider orientation="vertical" flexItem />
+          <section className="lg:w-[60%] space-y-6 lg:min-h-screen pt-10">
             {/* Bill Details */}
             <TableContainer
               component={Paper}
@@ -414,13 +511,11 @@ const Cart = () => {
                     <TableCell align="right">${calculateTotal()}</TableCell>
                   </TableRow>
                 </TableBody>
+                
               </Table>
             </TableContainer>
-          </section>
-          <Divider orientation="vertical" flexItem />
-          <section className="lg:w-[60%] flex justify-center px-5 pb-0 lg:pb-0">
             <Box>
-              <Link to={"/staff/jewelry/area/sale/1"}>
+              {/* <Link to={"/staff/jewelry/area/sale/1"}>
                 <Button
                   variant="outlined"
                   // onClick={handleNavigateHome}
@@ -439,7 +534,7 @@ const Cart = () => {
                 >
                   Go to Home
                 </Button>
-              </Link>
+              </Link> */}
               <Typography
                 variant="h4"
                 component="h1"
@@ -448,7 +543,7 @@ const Cart = () => {
                 gutterBottom
                 py={4}
               >
-                Payment Here
+                Click To Payment
               </Typography>
               <Box
                 display="flex"
@@ -466,7 +561,7 @@ const Cart = () => {
                     boxShadow: 3,
                   }}
                 >
-                  <AddCardIcon sx={{ fontSize: 40, color: "gray" }} />
+                  <PaymentsIcon sx={{ fontSize: 40, color: "#007bff" }} />
                   <Box textAlign="center" color="gray">
                     {/* <Typography variant="body1" gutterBottom>
                       Customer Information
@@ -489,8 +584,8 @@ const Cart = () => {
                     </Button>
                   </Box>
                 </Card>
-                <EventShow />
               </Box>
+              {/* <EventShow /> */}
               {/* aaaaaa */}
             </Box>
           </section>
@@ -543,7 +638,23 @@ const Cart = () => {
                     error={touched.email && Boolean(errors.email)}
                     helperText={touched.email && errors.email}
                   />
-                  <Button type="submit" variant="contained" fullWidth>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                      mt: 2,
+                      backgroundColor: "#007bff",
+                      color: "#fff",
+                      fontWeight: "bold",
+                      "&:hover": {
+                        backgroundColor: "#0056b3",
+                      },
+                      borderRadius: 2,
+                      boxShadow: "none",
+                      textTransform: "none",
+                    }}
+                  >
                     Submit
                   </Button>
                 </Form>
@@ -552,6 +663,7 @@ const Cart = () => {
           </Box>
         </Modal>
       </div>
+      {/* {<Footer />} */}
     </>
   );
 };

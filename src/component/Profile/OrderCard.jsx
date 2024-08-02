@@ -1,37 +1,37 @@
-import React, { useEffect, useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 import {
+  Alert,
   Box,
+  Button,
   Card,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  IconButton,
+  Menu,
+  MenuItem,
+  Pagination,
   Paper,
+  Radio,
+  RadioGroup,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
-  MenuItem,
-  Menu,
-  Button,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
   TextField,
-  IconButton,
-  Pagination,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Snackbar, // Import Snackbar for error messages
+  Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { updateOrderStatus } from "../State/AreaOrder/Action";
 import { getUsersOrders } from "../State/Order/Action";
-import { Alert } from "@mui/material"; // Import Alert component
-import { toast } from "react-toastify";
 
 export default function OrderCard() {
   const { orders } = useSelector((store) => store.order);
@@ -464,7 +464,7 @@ export default function OrderCard() {
                     <TableCell align="center">
                       {order.customer.fullname}
                     </TableCell>
-                    <TableCell align="center">{order.totalAmount}</TableCell>
+                    <TableCell align="center">{order.totalPrice}</TableCell>
                     <TableCell align="center">{order.areaName}</TableCell>
                     <TableCell align="center">
                       {order.items[0].discountPercentage}%
